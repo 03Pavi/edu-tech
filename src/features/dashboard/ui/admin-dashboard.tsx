@@ -1,13 +1,12 @@
 'use client'
 import React, { useState } from 'react';
-import { Container, Stack, Typography, Box, Paper, Avatar, Grid, Chip, IconButton, Button } from '@mui/material';
+import { Container, Stack, Typography, Box, Paper, Avatar, Chip, IconButton, Button } from '@mui/material';
 import { PageContainer } from '@/shared/ui/page-container';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import RecordVoiceOverRoundedIcon from '@mui/icons-material/RecordVoiceOverRounded';
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
-import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 
 const StatCard = ({ title, value, icon, color, subValue }: { title: string, value: string, icon: React.ReactNode, color: string, subValue?: string }) => (
   <Paper sx={{ p: 4, borderRadius: '24px', position: 'relative', overflow: 'hidden', height: '100%', border: '1px solid #F1F5F9' }}>
@@ -52,26 +51,26 @@ export const AdminDashboard = () => {
           </Box>
 
           {/* Core Metrics */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', md: '1 1 calc(25% - 18px)' } }}>
               <StatCard title="Total Students" value="12,450" icon={<PeopleAltRoundedIcon />} color="#2563EB" subValue="+12%" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', md: '1 1 calc(25% - 18px)' } }}>
               <StatCard title="Expert Teachers" value="48" icon={<RecordVoiceOverRoundedIcon />} color="#8B5CF6" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', md: '1 1 calc(25% - 18px)' } }}>
               <StatCard title="Live Sessions" value="12" icon={<RadioButtonCheckedRoundedIcon sx={{ animation: 'pulse 1.5s infinite' }} />} color="#EF4444" subValue="Active" />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(50% - 12px)', md: '1 1 calc(25% - 18px)' } }}>
               <StatCard title="Lectures Done" value="856" icon={<AssignmentTurnedInRoundedIcon />} color="#1CB068" subValue="This Month" />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Lists Section */}
-          <Grid container spacing={4}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
             {/* Teacher Management */}
-            <Grid item xs={12} lg={7}>
-              <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9' }}>
+            <Box sx={{ flex: { xs: '1 1 100%', lg: '1 1 calc(58.333% - 16px)' } }}>
+              <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9', height: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                   <Typography variant="h5" fontWeight="800">Teacher Performance</Typography>
                   <Button variant="text" sx={{ color: '#1CB068', fontWeight: 700 }}>View All</Button>
@@ -105,11 +104,11 @@ export const AdminDashboard = () => {
                   ))}
                 </Stack>
               </Paper>
-            </Grid>
+            </Box>
 
             {/* New Registrations */}
-            <Grid item xs={12} lg={5}>
-              <Paper sx={{ p: 4, borderRadius: '32px', bgcolor: '#0F172A', color: 'white' }}>
+            <Box sx={{ flex: { xs: '1 1 100%', lg: '1 1 calc(41.666% - 16px)' } }}>
+              <Paper sx={{ p: 4, borderRadius: '32px', bgcolor: '#0F172A', color: 'white', height: '100%' }}>
                 <Typography variant="h5" fontWeight="800" sx={{ mb: 4 }}>New Students</Typography>
                 <Stack spacing={4}>
                   {users.map((user, i) => (
@@ -134,8 +133,8 @@ export const AdminDashboard = () => {
                   View User Directory
                 </Button>
               </Paper>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Resource Usage / Live Map Simulation */}
           <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9' }}>
