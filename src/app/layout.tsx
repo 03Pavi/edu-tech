@@ -9,7 +9,9 @@ export const metadata: Metadata = {
   title: "EduQuest | Premier Test Series",
   description: "Advanced exam preparation platform",
   icons: {
-    icon: "/logo.svg",
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
