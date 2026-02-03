@@ -20,6 +20,20 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import LanguageIcon from '@mui/icons-material/Language';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import LiveTvRoundedIcon from '@mui/icons-material/LiveTvRounded';
+import VideoLibraryRoundedIcon from '@mui/icons-material/VideoLibraryRounded';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import Link from 'next/link';
 import styles from './page-container.module.scss';
 
@@ -29,10 +43,29 @@ interface PageContainerProps {
 
 export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
   const [showBanner, setShowBanner] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
   });
+
+  const toggleSidebar = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+    setSidebarOpen(open);
+  };
+
+  const menuItems = [
+    { label: 'Home', icon: <HomeRoundedIcon />, href: '/' },
+    { label: 'Dashboard', icon: <DashboardRoundedIcon />, href: '/dashboard' },
+    { label: 'Test Series', icon: <AssignmentRoundedIcon />, href: '/test-series' },
+    { label: 'Live Classes', icon: <LiveTvRoundedIcon />, href: '/live-classes' },
+    { label: 'Recorded Classes', icon: <VideoLibraryRoundedIcon />, href: '/recorded-classes' },
+  ];
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: '#F8FAFC' }}>
@@ -84,9 +117,11 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
             {/* Nav Items - Desktop Only */}
             <Stack direction="row" className={styles.navItems}>
-              {['Exams', 'SuperCoaching', 'Test Series', 'Books', 'Pass', 'More'].map((item) => (
+              {['Exams', 'SuperCoaching', 'Test Series', 'Live Classes', 'Recorded', 'Dashboard', 'More'].map((item) => (
                 <Button
                   key={item}
+                  href={item === 'Dashboard' ? '/dashboard' : item === 'Test Series' ? '/test-series' : item === 'Live Classes' ? '/live-classes' : item === 'Recorded' ? '/recorded-classes' : '#'}
+                  component={Link}
                   endIcon={['Exams', 'Pass', 'More'].includes(item) ? <KeyboardArrowDownIcon /> : null}
                   className={styles.navButton}
                 >
@@ -121,9 +156,17 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
                 <KeyboardArrowDownIcon sx={{ fontSize: 14 }} />
               </IconButton>
 
+              <IconButton
+                size="small"
+                onClick={toggleSidebar(true)}
+                sx={{ ml: 1, color: '#1B2559' }}
+              >
+                <MenuIcon />
+              </IconButton>
+
               <Button
                 variant="contained"
-                href="/test-series"
+                href="/auth/login"
                 component={Link}
                 size="small"
                 className={styles.getStartedButton}
@@ -134,6 +177,55 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
           </Toolbar>
         </Container>
       </AppBar>
+
+      {/* Sidebar Drawer */}
+      <Drawer
+        anchor="left"
+        open={sidebarOpen}
+        onClose={toggleSidebar(false)}
+        PaperProps={{
+          sx: { width: 280, p: 2, bgcolor: '#FFFFFF' }
+        }}
+      >
+        <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', px: 1 }}>
+          <Box className={styles.logoIcon} sx={{ mr: 2 }}>E</Box>
+          <Typography variant="h6" fontWeight="900" color="#1B2559">EduMind</Typography>
+        </Box>
+
+        <List>
+          {menuItems.map((item) => (
+            <ListItem key={item.label} disablePadding sx={{ mb: 1 }}>
+              <ListItemButton
+                component={Link}
+                href={item.href}
+                onClick={toggleSidebar(false)}
+                sx={{
+                  borderRadius: '12px',
+                  '&:hover': { bgcolor: 'rgba(28, 176, 104, 0.08)' },
+                  color: '#475569'
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 40, color: 'inherit' }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.label}
+                  primaryTypographyProps={{ fontWeight: 700, fontSize: '0.95rem' }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+
+        <Box sx={{ mt: 'auto', p: 2, bgcolor: '#F8FAFC', borderRadius: '16px' }}>
+          <Typography variant="caption" fontWeight="800" color="#64748B" display="block" gutterBottom>
+            FREE PLAN
+          </Typography>
+          <Button variant="contained" fullWidth size="small" sx={{ bgcolor: '#1CB068', borderRadius: '8px' }}>
+            Upgrade Pro
+          </Button>
+        </Box>
+      </Drawer>
 
       {/* Page Content */}
       <Box className={styles.pageContent}>

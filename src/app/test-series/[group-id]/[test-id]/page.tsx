@@ -12,7 +12,6 @@ import {
   Breadcrumbs,
   Link as MuiLink,
   Container,
-  Grid
 } from '@mui/material';
 import Link from 'next/link';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
@@ -100,7 +99,13 @@ export default function TestInstructionsPage() {
                 Please read the following rules carefully before starting.
               </Typography>
 
-              <Grid container spacing={1.5}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1.5
+                }}
+              >
                 {[
                   'Multiple-choice questions (MCQs).',
                   'One point per correct answer.',
@@ -109,14 +114,14 @@ export default function TestInstructionsPage() {
                   'Ensure stable environment.',
                   'Do not refresh page.',
                 ].map((instruction, index) => (
-                  <Grid item key={index} xs={12} sm={6}>
+                  <Box key={index} sx={{ width: { xs: '100%', sm: 'calc(50% - 6px)' } }}>
                     <Paper variant="outlined" className={styles.instructionCard}>
                       <CheckCircleRoundedIcon sx={{ fontSize: 18, color: '#1CB068' }} />
                       <Typography variant="body2" fontWeight="700" sx={{ fontSize: '0.75rem' }}>{instruction}</Typography>
                     </Paper>
-                  </Grid>
+                  </Box>
                 ))}
-              </Grid>
+              </Box>
             </Box>
 
             <Box className={styles.warningBox}>

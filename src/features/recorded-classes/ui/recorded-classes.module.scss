@@ -1,0 +1,81 @@
+.recordCard {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  border: 1px solid #F1F5F9 !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1) !important;
+
+    .playOverlay {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.thumbnailWrapper {
+  position: relative;
+  height: 180px;
+  background: #E2E8F0;
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+
+.categoryChip {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(4px);
+  color: #0F172A !important;
+  font-weight: 800 !important;
+  border: none !important;
+}
+
+.recordTitle {
+  font-weight: 800 !important;
+  line-height: 1.3 !important;
+  margin-bottom: 8px !important;
+  height: 48px;
+  overflow: hidden;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.uploadDialog {
+  :global(.MuiPaper-root) {
+    border-radius: 24px;
+    padding: 16px;
+  }
+}
+
+.dropZone {
+  border: 2px dashed #E2E8F0;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #F8FAFC;
+
+  &:hover {
+    border-color: #1CB068;
+    background: rgba(28, 176, 104, 0.05);
+  }
+}

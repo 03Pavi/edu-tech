@@ -11,13 +11,13 @@
 }
 
 .paletteGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
 .paletteButton {
-  min-width: 100% !important;
+  flex: 0 0 calc(25% - 6px); // Gap is 8px. (8px * 3) / 4 = 6px per item reduction for 4 items
   aspect-ratio: 1/1;
   border-radius: 4px !important;
   padding: 0 !important;

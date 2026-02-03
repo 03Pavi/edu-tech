@@ -73,16 +73,24 @@
 }
 
 .testGrid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 24px;
 
-  @media (min-width: 600px) {
-    grid-template-columns: repeat(2, 1fr);
+  >* {
+    width: 100%;
+
+    @media (min-width: 600px) {
+      width: calc(50% - 12px); // Gap is 24px
+    }
+
+    @media (min-width: 1200px) {
+      width: calc(33.333% - 21.33px);
+      // Gap becomes 32px below
+    }
   }
 
   @media (min-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
     gap: 32px;
   }
 }

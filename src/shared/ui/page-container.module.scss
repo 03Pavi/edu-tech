@@ -224,6 +224,7 @@
 
 .pageContent {
   min-height: calc(100vh - 120px);
+  overflow-x: hidden;
 }
 
 .floatingContainer {

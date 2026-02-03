@@ -4,7 +4,6 @@ import React, { useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   Typography,
-  Grid,
   Stack,
   Button,
   Box,
@@ -139,22 +138,28 @@ export default function TestAttemptPage() {
               </Box>
             </Box>
 
-            <Grid container spacing={3}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 3
+              }}
+            >
               {[
                 { label: 'Total Questions', value: result.totalQuestions, icon: <AssignmentRoundedIcon />, color: '#1CB068' },
                 { label: 'Attempted', value: result.attempted, icon: <HelpRoundedIcon />, color: '#00A3FF' },
                 { label: 'Correct Answers', value: result.correct, icon: <CheckCircleRoundedIcon />, color: '#10B981' },
                 { label: 'Incorrect Answers', value: result.incorrect, icon: <CancelRoundedIcon />, color: '#f43f5e' },
               ].map((stat, i) => (
-                <Grid item key={i} xs={12} sm={6} md={3}>
+                <Box key={i} sx={{ width: { xs: '100%', sm: 'calc(50% - 12px)', md: 'calc(25% - 18px)' } }}>
                   <Paper variant="outlined" className={styles.statCard}>
                     <Box sx={{ color: stat.color, mb: 1.5 }}>{stat.icon}</Box>
                     <Typography variant="h4" fontWeight="900" sx={{ mb: 0.5 }}>{stat.value}</Typography>
                     <Typography variant="body2" color="text.secondary" fontWeight="700">{stat.label}</Typography>
                   </Paper>
-                </Grid>
+                </Box>
               ))}
-            </Grid>
+            </Box>
 
             <Box className={styles.performanceBanner}>
               <Typography variant="h5" className={styles.performanceTitle}>
@@ -196,8 +201,15 @@ export default function TestAttemptPage() {
   return (
     <PageContainer>
       <Container maxWidth="xl" sx={{ py: { xs: 2, md: 4 } }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', lg: 'row' },
+            gap: 4,
+            alignItems: 'flex-start'
+          }}
+        >
+          <Box sx={{ width: '100%' }}>
             <Paper elevation={0} className={styles.examHeader}>
               <Box className={styles.examTitleWrapper}>
                 <Box className={styles.examIconBox}>
@@ -209,63 +221,63 @@ export default function TestAttemptPage() {
                 <Timer initialMinutes={test.durationMinutes} onTimeUp={handleTimeUp} />
               </Box>
             </Paper>
-          </Grid>
 
-          <Grid item xs={12} lg={8}>
-            <Stack spacing={3}>
-              <QuestionPanel
-                question={currentQuestion}
-                questionNumber={currentQuestionIndex + 1}
-                selectedOption={answers[currentQuestion.id] ?? null}
-                onSelectOption={handleSelectOption}
-              />
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', lg: 'row' }, gap: 4, mt: 4 }}>
+              <Stack spacing={3} sx={{ flex: 1, width: '100%' }}>
+                <QuestionPanel
+                  question={currentQuestion}
+                  questionNumber={currentQuestionIndex + 1}
+                  selectedOption={answers[currentQuestion.id] ?? null}
+                  onSelectOption={handleSelectOption}
+                />
 
-              <Paper elevation={0} className={styles.navigationFooter}>
-                <Button
-                  variant="outlined"
-                  disabled={currentQuestionIndex === 0}
-                  onClick={prevQuestion}
-                  size="small"
-                  className={styles.navBtn}
-                  sx={{ borderWidth: 2 }}
-                >
-                  Previous
-                </Button>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  {currentQuestionIndex === test.questions.length - 1 ? (
-                    <Button
-                      variant="contained"
-                      disabled={attemptedCount === 0}
-                      onClick={() => setIsSubmitDialogOpen(true)}
-                      size="small"
-                      className={`${styles.navBtn} ${styles.navBtnContained}`}
-                    >
-                      Finish
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="contained"
-                      onClick={nextQuestion}
-                      size="small"
-                      className={`${styles.navBtn} ${styles.navBtnContained}`}
-                    >
-                      Next
-                    </Button>
-                  )}
-                </Box>
-              </Paper>
-            </Stack>
-          </Grid>
+                <Paper elevation={0} className={styles.navigationFooter}>
+                  <Button
+                    variant="outlined"
+                    disabled={currentQuestionIndex === 0}
+                    onClick={prevQuestion}
+                    size="small"
+                    className={styles.navBtn}
+                    sx={{ borderWidth: 2 }}
+                  >
+                    Previous
+                  </Button>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    {currentQuestionIndex === test.questions.length - 1 ? (
+                      <Button
+                        variant="contained"
+                        disabled={attemptedCount === 0}
+                        onClick={() => setIsSubmitDialogOpen(true)}
+                        size="small"
+                        className={`${styles.navBtn} ${styles.navBtnContained}`}
+                      >
+                        Finish
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        onClick={nextQuestion}
+                        size="small"
+                        className={`${styles.navBtn} ${styles.navBtnContained}`}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </Box>
+                </Paper>
+              </Stack>
 
-          <Grid item xs={12} lg={4} sx={{ order: { xs: -1, lg: 1 } }}>
-            <QuestionPalette
-              totalQuestions={test.questions.length}
-              currentQuestionIndex={currentQuestionIndex}
-              answeredQuestions={Object.keys(answers).map(id => test.questions.findIndex(q => q.id === id).toString())}
-              onQuestionClick={setCurrentQuestionIndex}
-            />
-          </Grid>
-        </Grid>
+              <Box sx={{ width: { xs: '100%', lg: '350px' }, flexShrink: 0, order: { xs: -1, lg: 1 } }}>
+                <QuestionPalette
+                  totalQuestions={test.questions.length}
+                  currentQuestionIndex={currentQuestionIndex}
+                  answeredQuestions={Object.keys(answers).map(id => test.questions.findIndex(q => q.id === id).toString())}
+                  onQuestionClick={setCurrentQuestionIndex}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Container>
 
       <SubmitDialog

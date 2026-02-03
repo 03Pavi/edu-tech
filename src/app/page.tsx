@@ -8,6 +8,7 @@ import {
   Box,
   Container,
   Paper,
+  IconButton,
   alpha
 } from '@mui/material';
 import Image from 'next/image';
@@ -16,6 +17,18 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import QuizRoundedIcon from '@mui/icons-material/QuizRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
+import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
+import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
+import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
+import AccountBalanceRoundedIcon from '@mui/icons-material/AccountBalanceRounded';
+import SecurityRoundedIcon from '@mui/icons-material/SecurityRounded';
+import EngineeringRoundedIcon from '@mui/icons-material/EngineeringRounded';
+import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import TwitterIcon from '@mui/icons-material/Twitter';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { PageContainer } from '@/shared/ui/page-container';
 import styles from './home.module.scss';
 
@@ -85,7 +98,7 @@ export default function HomePage() {
                   <Button
                     variant="contained"
                     size="large"
-                    href="/test-series"
+                    href="/auth/login"
                     component={Link}
                     className={styles.heroButton}
                   >
@@ -157,6 +170,172 @@ export default function HomePage() {
           </Box>
         </Paper>
       </Container>
+
+      {/* Exam Categories */}
+      <Box className={styles.sectionPadding}>
+        <Container maxWidth="xl">
+          <Typography variant="h3" className={styles.sectionTitle} textAlign="center">
+            Popular <Box component="span" className={styles.highlightGreen}>Exam Categories</Box>
+          </Typography>
+          <Box className={styles.categoriesGrid}>
+            {[
+              { label: 'SSC Exams', icon: <AccountBalanceRoundedIcon />, count: '20+ Exams' },
+              { label: 'Banking', icon: <AccountBalanceRoundedIcon />, count: '15+ Exams' },
+              { label: 'Teaching', icon: <SchoolRoundedIcon />, count: '12+ Exams' },
+              { label: 'Defense', icon: <SecurityRoundedIcon />, count: '10+ Exams' },
+              { label: 'Railways', icon: <GroupsRoundedIcon />, count: '8+ Exams' },
+              { label: 'Engineering', icon: <EngineeringRoundedIcon />, count: '25+ Exams' },
+              { label: 'State Exams', icon: <LibraryBooksRoundedIcon />, count: '50+ Exams' },
+              { label: 'Other', icon: <LanguageRoundedIcon />, count: '100+ Exams' }
+            ].map((cat, i) => (
+              <Paper key={i} className={styles.categoryCard} elevation={0}>
+                <Box className={styles.categoryIcon}>{cat.icon}</Box>
+                <Typography className={styles.categoryLabel}>{cat.label}</Typography>
+                <Typography className={styles.categoryCount}>{cat.count}</Typography>
+              </Paper>
+            ))}
+          </Box>
+          <Box sx={{ textAlign: 'center', mt: 6 }}>
+            <Button variant="outlined" size="large" className={styles.viewAllButton}>
+              View All Categories
+            </Button>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Why Choose Us */}
+      <Box className={styles.whyChooseSection}>
+        <Container maxWidth="xl">
+          <Typography variant="h3" className={styles.sectionTitle} textAlign="center">
+            Why Choose <Box component="span" className={styles.highlightGreen}>EduMind</Box>?
+          </Typography>
+          <Box className={styles.featuresGrid}>
+            {[
+              {
+                title: 'Quality Content',
+                desc: 'Curated by experts for the best results.',
+                icon: <LibraryBooksRoundedIcon />,
+                color: '#6366F1'
+              },
+              {
+                title: 'Real Exam Experience',
+                desc: 'Simulate actual exam environment.',
+                icon: <EmojiEventsRoundedIcon />,
+                color: '#F59E0B'
+              },
+              {
+                title: 'Expert Analysis',
+                desc: 'Deep insights into your performance.',
+                icon: <TrendingUpRoundedIcon />,
+                color: '#1CB068'
+              },
+              {
+                title: 'Community Support',
+                desc: 'Join 6.4 Crore+ fellow aspirants.',
+                icon: <PeopleAltRoundedIcon />,
+                color: '#EC4899'
+              }
+            ].map((feature, i) => (
+              <Box key={i} className={styles.featureItem}>
+                <Box className={styles.featureIcon} sx={{ color: feature.color }}>
+                  {feature.icon}
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 800, mb: 1 }}>{feature.title}</Typography>
+                <Typography variant="body2" color="text.secondary">{feature.desc}</Typography>
+              </Box>
+            ))}
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Refer & Earn */}
+      <Box className={styles.referSection}>
+        <Container maxWidth="xl">
+          <Box className={styles.referCard}>
+            <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} alignItems="center">
+              <Box sx={{ flex: 1 }}>
+                <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: 'white' }}>
+                  Refer & <Box component="span" sx={{ color: '#FBDF07' }}>Earn Rewards</Box>
+                </Typography>
+                <Typography variant="h6" sx={{ color: 'rgba(255,255,255,0.8)', mb: 4 }}>
+                  Invite your friends to EduMind and get exclusive benefits on your next subscription.
+                </Typography>
+                <Button variant="contained" className={styles.referButton}>
+                  Invite Now
+                </Button>
+              </Box>
+              <Box sx={{ flex: 0.8, display: { xs: 'none', md: 'block' } }}>
+                <Image
+                  src="/exam-prep.png"
+                  alt="Refer and Earn"
+                  width={400}
+                  height={300}
+                  style={{ width: '100%', height: 'auto' }}
+                />
+              </Box>
+            </Stack>
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Footer */}
+      <Box component="footer" className={styles.footer}>
+        <Container maxWidth="xl">
+          <Box className={styles.footerGrid}>
+            <Box>
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
+                <Box className={styles.footerLogoIcon}>E</Box>
+                <Typography variant="h5" sx={{ fontWeight: 900 }}>EduMind</Typography>
+              </Stack>
+              <Typography variant="body2" sx={{ color: '#64748B', maxWidth: 300, mb: 3 }}>
+                India's top platform for exam preparation. Empowring millions of students to achieve their dreams.
+              </Typography>
+              <Stack direction="row" spacing={2}>
+                <IconButton size="small" className={styles.socialIcon}><FacebookIcon /></IconButton>
+                <IconButton size="small" className={styles.socialIcon}><TwitterIcon /></IconButton>
+                <IconButton size="small" className={styles.socialIcon}><InstagramIcon /></IconButton>
+                <IconButton size="small" className={styles.socialIcon}><LinkedInIcon /></IconButton>
+              </Stack>
+            </Box>
+
+            <Box>
+              <Typography variant="h6" className={styles.footerHeading}>Company</Typography>
+              <Stack spacing={1.5}>
+                {['About Us', 'Careers', 'Contact Us', 'Blog', 'Affiliate'].map(link => (
+                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
+                ))}
+              </Stack>
+            </Box>
+
+            <Box>
+              <Typography variant="h6" className={styles.footerHeading}>Exams</Typography>
+              <Stack spacing={1.5}>
+                {['SSC Exams', 'Banking', 'Railway', 'Teaching', 'Defense'].map(link => (
+                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
+                ))}
+              </Stack>
+            </Box>
+
+            <Box>
+              <Typography variant="h6" className={styles.footerHeading}>Products</Typography>
+              <Stack spacing={1.5}>
+                {['Test Series', 'SuperCoaching', 'Previous Year Papers', 'Practice Questions', 'Live Classes'].map(link => (
+                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
+                ))}
+              </Stack>
+            </Box>
+          </Box>
+          <Box className={styles.footerBottom}>
+            <Typography variant="body2" color="text.secondary">
+              © 2024 EduMind Education. All rights reserved.
+            </Typography>
+            <Stack direction="row" spacing={3}>
+              <Link href="#" className={styles.footerLink}>Privacy Policy</Link>
+              <Link href="#" className={styles.footerLink}>Terms of Service</Link>
+            </Stack>
+          </Box>
+        </Container>
+      </Box>
     </PageContainer>
   );
 }
