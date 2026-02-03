@@ -55,9 +55,14 @@ export default function LoginPage() {
         {/* Right Side - Form */}
         <Box className={styles.authRight}>
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Box className={styles.brandWrapper}>
-              {/* Reusing Logo logic or just text */}
-              <Box className={styles.logoBox} sx={{ mx: 'auto', mb: 1 }}>E</Box>
+            <Box className={styles.brandWrapper} sx={{ flexDirection: 'column', gap: 1 }}>
+              <Image
+                src="/favicon.png"
+                alt="Logo"
+                width={32}
+                height={32}
+                style={{ borderRadius: '8px', scale: 1.2 }}
+              />
             </Box>
             <Typography variant="h5" fontWeight="900" color="#1E293B">Welcome Back</Typography>
             <Typography variant="body2" color="#64748B">Please enter your details to sign in.</Typography>
@@ -161,7 +166,7 @@ export default function LoginPage() {
             </Typography>
           </Box>
         </Box>
-      </Paper>
-    </Box>
+      </Paper >
+    </Box >
   );
 }

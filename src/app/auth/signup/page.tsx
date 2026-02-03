@@ -57,8 +57,14 @@ export default function SignupPage() {
         {/* Right Side - Form */}
         <Box className={styles.authRight}>
           <Box sx={{ mb: 4, textAlign: 'center' }}>
-            <Box className={styles.brandWrapper}>
-              <Box className={styles.logoBox} sx={{ mx: 'auto', mb: 1 }}>E</Box>
+            <Box className={styles.brandWrapper} sx={{ flexDirection: 'column', gap: 1 }}>
+              <Image
+                src="/favicon.png"
+                alt="Logo"
+                width={32}
+                height={32}
+                style={{ borderRadius: '8px', scale: 1.2 }}
+              />
             </Box>
             <Typography variant="h5" fontWeight="900" color="#1E293B">Create Account</Typography>
             <Typography variant="body2" color="#64748B">Fill in the details to start your journey.</Typography>
