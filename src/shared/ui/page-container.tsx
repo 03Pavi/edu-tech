@@ -35,6 +35,8 @@ import {
   ListItemText,
 } from '@mui/material';
 import Link from 'next/link';
+import { useAppSelector } from '@/store/hooks';
+import { hasPermission } from '@/shared/config/permissions';
 import styles from './page-container.module.scss';
 
 interface PageContainerProps {
@@ -44,6 +46,7 @@ interface PageContainerProps {
 export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const user = useAppSelector((state) => state.user);
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -130,27 +133,8 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
               ))}
             </Stack>
 
-            {/* Search & Profile */}
+            {/* Profile & Menu */}
             <Stack direction="row" spacing={{ xs: 0.5, md: 2 }} alignItems="center">
-              <Box className={styles.searchBoxDesktop}>
-                <TextField
-                  size="small"
-                  placeholder="Search"
-                  className={styles.searchInput}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon sx={{ color: '#94A3B8', fontSize: 18 }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </Box>
-
-              <IconButton size="small" className={styles.searchIconButton}>
-                <SearchIcon sx={{ fontSize: 18 }} />
-              </IconButton>
-
               <IconButton size="small" sx={{ display: { xs: 'none', md: 'inline-flex' }, color: '#475569' }}>
                 <LanguageIcon sx={{ fontSize: 20 }} />
                 <KeyboardArrowDownIcon sx={{ fontSize: 14 }} />
@@ -217,14 +201,16 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
           ))}
         </List>
 
-        <Box sx={{ mt: 'auto', p: 2, bgcolor: '#F8FAFC', borderRadius: '16px' }}>
-          <Typography variant="caption" fontWeight="800" color="#64748B" display="block" gutterBottom>
-            FREE PLAN
-          </Typography>
-          <Button variant="contained" fullWidth size="small" sx={{ bgcolor: '#1CB068', borderRadius: '8px' }}>
-            Upgrade Pro
-          </Button>
-        </Box>
+        {user.role === 'user' && (
+          <Box sx={{ mt: 'auto', p: 2, bgcolor: '#F8FAFC', borderRadius: '16px' }}>
+            <Typography variant="caption" fontWeight="800" color="#64748B" display="block" gutterBottom>
+              FREE PLAN
+            </Typography>
+            <Button variant="contained" fullWidth size="small" sx={{ bgcolor: '#1CB068', borderRadius: '8px' }}>
+              Upgrade Pro
+            </Button>
+          </Box>
+        )}
       </Drawer>
 
       {/* Page Content */}

@@ -5,10 +5,16 @@ import React from 'react';
 import { Container, Typography, Card, CardContent, Button, Stack, Box, Chip } from '@mui/material';
 import { PageContainer } from '@/shared/ui/page-container';
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAppSelector } from '@/store/hooks';
+import { hasPermission } from '@/shared/config/permissions';
 
 export default function LiveClassesPage() {
+  const user = useAppSelector((state) => state.user);
+  const canStartLive = hasPermission(user.role, 'canStartLiveClass');
+  const isStudent = user.role === 'user';
   const classes = [
     {
       id: 'maths-101',
@@ -43,13 +49,39 @@ export default function LiveClassesPage() {
     <PageContainer>
       <Container maxWidth="xl" sx={{ py: 6 }}>
         <Stack spacing={4}>
-          <Box>
-            <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
-              Live <Box component="span" sx={{ color: '#1CB068' }}>Classes</Box>
-            </Typography>
-            <Typography color="text.secondary">
-              Learn from India's top educators in real-time.
-            </Typography>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            alignItems: { xs: 'flex-start', sm: 'center' },
+            gap: 2
+          }}>
+            <Box>
+              <Typography variant="h3" sx={{ fontWeight: 900, mb: 1 }}>
+                Live <Box component="span" sx={{ color: '#1CB068' }}>Classes</Box>
+              </Typography>
+              <Typography color="text.secondary">
+                Learn from India's top educators in real-time.
+              </Typography>
+            </Box>
+            {canStartLive && (
+              <Button
+                variant="contained"
+                startIcon={<VideoCallRoundedIcon />}
+                component={Link}
+                href="/live-classes/start"
+                sx={{
+                  bgcolor: '#1CB068',
+                  borderRadius: '12px',
+                  px: 3,
+                  py: 1.5,
+                  fontWeight: 800,
+                  width: { xs: '100%', sm: 'auto' }
+                }}
+              >
+                Go Live Now
+              </Button>
+            )}
           </Box>
 
           <Box
@@ -114,23 +146,25 @@ export default function LiveClassesPage() {
             ))}
           </Box>
 
-          <Box sx={{ bgcolor: '#F8FAFC', p: 4, borderRadius: '24px', mt: 4 }}>
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} alignItems="center">
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>Are you an educator?</Typography>
-                <Typography color="text.secondary">Join our platform and help millions of students achieve their dreams.</Typography>
-              </Box>
-              <Button
-                variant="outlined"
-                size="large"
-                sx={{ borderRadius: '12px', borderWeight: 2, fontWeight: 800 }}
-                component={Link}
-                href="/live-classes/start?role=teacher"
-              >
-                Apply as Teacher
-              </Button>
-            </Stack>
-          </Box>
+          {isStudent && (
+            <Box sx={{ bgcolor: '#F8FAFC', p: 4, borderRadius: '24px', mt: 4 }}>
+              <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} alignItems="center">
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h5" sx={{ fontWeight: 800, mb: 1 }}>Are you an educator?</Typography>
+                  <Typography color="text.secondary">Join our platform and help millions of students achieve their dreams.</Typography>
+                </Box>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{ borderRadius: '12px', borderWeight: 2, fontWeight: 800 }}
+                  component={Link}
+                  href="/live-classes/start?role=teacher"
+                >
+                  Apply as Teacher
+                </Button>
+              </Stack>
+            </Box>
+          )}
         </Stack>
       </Container>
     </PageContainer>

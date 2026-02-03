@@ -7,11 +7,19 @@ import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineR
 import VideoLibraryRoundedIcon from '@mui/icons-material/VideoLibraryRounded';
 import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import Link from 'next/link';
+import { useAppSelector } from '@/store/hooks';
+import { hasPermission } from '@/shared/config/permissions';
+import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
+import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 
 export const UserDashboard = () => {
-  const mockUser = {
-    name: "John Doe",
-    email: "john.doe@example.com",
+  const user = useAppSelector((state) => state.user);
+  const canStartLive = hasPermission(user.role, 'canStartLiveClass');
+  const canUploadNotes = hasPermission(user.role, 'canUploadNotes');
+
+  const userData = {
+    name: user.name || "User",
+    email: "user@example.com",
     memberSince: "Jan 2024",
     targetExam: "SSC CGL 2024"
   };
@@ -30,7 +38,7 @@ export const UserDashboard = () => {
                 letterSpacing: '-1.5px'
               }}
             >
-              Welcome back, <Box component="span" sx={{ color: '#1CB068' }}>{mockUser.name}</Box>!
+              Welcome back, <Box component="span" sx={{ color: '#1CB068' }}>{userData.name}</Box>!
             </Typography>
             <Typography variant="h6" sx={{ color: '#64748B', fontWeight: 500, fontSize: { xs: '1rem', md: '1.25rem' } }}>
               Track your progress and continue your preparation.
@@ -46,7 +54,7 @@ export const UserDashboard = () => {
             }}
           >
             <Box sx={{ width: { xs: '100%', lg: '350px' }, flexShrink: 0 }}>
-              <ProfileCard user={mockUser} />
+              <ProfileCard user={userData} />
 
               <Paper sx={{ p: 2, mt: 3, borderRadius: '24px', bgcolor: '#0F172A', color: 'white', border: 'none' }}>
                 <Typography variant="h6" fontWeight="800" sx={{ mb: 2 }}>Quick Actions</Typography>

@@ -8,9 +8,13 @@ import { RecordCard } from '@/features/recorded-classes/ui/record-card';
 import { UploadRecording } from '@/features/recorded-classes/ui/upload-recording';
 import SearchIcon from '@mui/icons-material/Search';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
+import { useAppSelector } from '@/store/hooks';
+import { hasPermission } from '@/shared/config/permissions';
 
 export default function RecordedClassesPage() {
   const [uploadOpen, setUploadOpen] = useState(false);
+  const user = useAppSelector((state) => state.user);
+  const canUpload = hasPermission(user.role, 'canUploadRecordedClasses');
 
   const mockRecordings = [
     {
@@ -74,21 +78,23 @@ export default function RecordedClassesPage() {
                 Learn at your own pace with our massive video library.
               </Typography>
             </Box>
-            <Button
-              variant="contained"
-              startIcon={<CloudUploadRoundedIcon />}
-              onClick={() => setUploadOpen(true)}
-              sx={{
-                bgcolor: '#1CB068',
-                borderRadius: '12px',
-                px: 3,
-                py: 1.5,
-                fontWeight: 800,
-                width: { xs: '100%', sm: 'auto' }
-              }}
-            >
-              Upload Class
-            </Button>
+            {canUpload && (
+              <Button
+                variant="contained"
+                startIcon={<CloudUploadRoundedIcon />}
+                onClick={() => setUploadOpen(true)}
+                sx={{
+                  bgcolor: '#1CB068',
+                  borderRadius: '12px',
+                  px: 3,
+                  py: 1.5,
+                  fontWeight: 800,
+                  width: { xs: '100%', sm: 'auto' }
+                }}
+              >
+                Upload Class
+              </Button>
+            )}
           </Box>
 
           <TextField
