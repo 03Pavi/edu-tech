@@ -87,7 +87,13 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
   const sidebarContent = (
     <>
-      <Toolbar sx={{ display: { xs: 'none', lg: 'block' } }} />
+      {/* Dynamic Spacer: Banner (40px) + AppBar (72px) on Desktop */}
+      <Box sx={{
+        display: { xs: 'none', lg: 'block' },
+        height: showBanner ? '112px' : '72px',
+        transition: 'height 0.3s ease'
+      }} />
+      {/* Spacer removed as we use the dynamic Box above */}
 
       <Box sx={{ p: 0, pt: { xs: 2, lg: 3 } }}>
         <Box sx={{ mb: 4, display: { xs: 'flex', lg: 'none' }, alignItems: 'center', px: 1 }}>
@@ -163,42 +169,9 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F8FAFC' }}>
-      {/* Sidebar - Desktop Permanent / Mobile Temporary */}
-      {user.isAuthenticated && (
-        <Box
-          component="nav"
-          sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}
-        >
-          {/* Mobile Drawer */}
-          <Drawer
-            variant="temporary"
-            open={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              display: { xs: 'block', lg: 'none' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, border: 'none', boxShadow: '10px 0 30px rgba(0,0,0,0.02)' },
-            }}
-          >
-            {sidebarContent}
-          </Drawer>
-
-          {/* Desktop Drawer */}
-          <Drawer
-            variant="permanent"
-            sx={{
-              display: { xs: 'none', lg: 'block' },
-              '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, border: 'none', borderRight: '1px solid #F1F5F9' },
-            }}
-            open
-          >
-            {sidebarContent}
-          </Drawer>
-        </Box>
-      )}
-
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#F8FAFC' }}>
+      {/* Sticky Header Wrapper */}
+      <Box sx={{ position: 'sticky', top: 0, zIndex: 1300 }}>
         {/* Top Banner */}
         {showBanner && (
           <Box className={styles.topBanner}>
@@ -224,10 +197,12 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
         {/* Main Navbar */}
         <AppBar
-          position="sticky"
+          position="static"
           elevation={0}
           className={`${styles.appBar} ${trigger ? styles.appBarScrolled : ''}`}
-          sx={{ width: '100%' }}
+          sx={{
+            width: '100%',
+          }}
         >
           <Container maxWidth="xl">
             <Toolbar disableGutters className={styles.toolbar}>
@@ -364,22 +339,65 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
             </Toolbar>
           </Container>
         </AppBar>
+      </Box>
 
-        {/* Page Content */}
-        <Box className={styles.pageContent}>
-          {children}
-        </Box>
+      <Box sx={{ display: 'flex', flexGrow: 1 }}>
+        {/* Sidebar - Desktop Permanent / Mobile Temporary */}
+        {user.isAuthenticated && (
+          <Box
+            component="nav"
+            sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}
+          >
+            {/* Mobile Drawer */}
+            <Drawer
+              variant="temporary"
+              open={sidebarOpen}
+              onClose={() => setSidebarOpen(false)}
+              ModalProps={{ keepMounted: true }}
+              sx={{
+                display: { xs: 'block', lg: 'none' },
+                '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth, border: 'none', boxShadow: '10px 0 30px rgba(0,0,0,0.02)' },
+              }}
+            >
+              {sidebarContent}
+            </Drawer>
 
-        {/* Footer / Floating */}
-        <Box className={styles.floatingContainer}>
-          <Fab color="success" aria-label="whatsapp" className={styles.whatsappFab}>
-            <WhatsAppIcon sx={{ fontSize: { xs: 24, md: 28 } }} />
-          </Fab>
-        </Box>
+            {/* Desktop Drawer */}
+            <Drawer
+              variant="permanent"
+              sx={{
+                display: { xs: 'none', lg: 'block' },
+                '& .MuiDrawer-paper': {
+                  boxSizing: 'border-box',
+                  width: drawerWidth,
+                  border: 'none',
+                  borderRight: '1px solid #F1F5F9',
+                },
+              }}
+              open
+            >
+              {sidebarContent}
+            </Drawer>
+          </Box>
+        )}
 
-        {/* Simple Mobile Nav Hint */}
-        <Box sx={{ p: 4, textAlign: 'center', opacity: 0.3, display: { xs: 'block', md: 'none' } }}>
-          <Typography variant="caption">© 2024 EduMind Education</Typography>
+        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          {/* Page Content */}
+          <Box className={styles.pageContent}>
+            {children}
+          </Box>
+
+          {/* Footer / Floating */}
+          <Box className={styles.floatingContainer}>
+            <Fab color="success" aria-label="whatsapp" className={styles.whatsappFab}>
+              <WhatsAppIcon sx={{ fontSize: { xs: 24, md: 28 } }} />
+            </Fab>
+          </Box>
+
+          {/* Simple Mobile Nav Hint */}
+          <Box sx={{ p: 4, textAlign: 'center', opacity: 0.3, display: { xs: 'block', md: 'none' } }}>
+            <Typography variant="caption">© 2024 EduMind Education</Typography>
+          </Box>
         </Box>
       </Box>
     </Box>
