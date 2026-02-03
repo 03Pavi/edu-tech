@@ -72,7 +72,7 @@ export default function SignupPage() {
 
           <form action={login}>
             <input type="hidden" name="name" value={`${firstName} ${lastName}`} />
-            <Stack spacing={2}>
+            <Stack>
               <Box className={styles.formField}>
                 <Typography className={styles.formLabel}>Full Name</Typography>
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
