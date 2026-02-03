@@ -1,0 +1,65 @@
+.timerCard {
+  padding: 16px !important;
+  border-radius: 12px !important;
+  background-color: white !important;
+  border: 1px solid #E2E8F0 !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.alertState {
+  background-color: rgba(239, 68, 68, 0.05) !important;
+  border-color: #FECACA !important;
+}
+
+.timerIcon {
+  color: #1CB068 !important;
+}
+
+.iconAlert {
+  color: #EF4444 !important;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.timeText {
+  font-weight: 800 !important;
+  color: #0F172A !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.textAlert {
+  color: #EF4444 !important;
+}
+
+.progressRoot {
+  height: 6px !important;
+  border-radius: 12px !important;
+  background-color: rgba(28, 176, 104, 0.1) !important;
+
+  :global(.MuiLinearProgress-bar) {
+    border-radius: 12px !important;
+    background-color: #1CB068 !important;
+  }
+}
+
+.progressAlert {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+
+  :global(.MuiLinearProgress-bar) {
+    background-color: #EF4444 !important;
+  }
+}

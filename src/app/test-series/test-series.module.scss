@@ -1,0 +1,95 @@
+.pageWrapper {
+  padding-top: 32px;
+  padding-bottom: 32px;
+
+  @media (min-width: 900px) {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+.breadcrumb {
+  margin-bottom: 16px !important;
+
+  li {
+    font-size: 0.75rem !important;
+
+    @media (min-width: 900px) {
+      font-size: 0.85rem !important;
+    }
+  }
+}
+
+.pageTitle {
+  font-weight: 900 !important;
+  letter-spacing: -1.5px !important;
+  line-height: 1.1 !important;
+  font-size: 1.75rem !important;
+
+  @media (min-width: 600px) {
+    font-size: 2.5rem !important;
+  }
+
+  @media (min-width: 900px) {
+    font-size: 3.5rem !important;
+  }
+}
+
+.highlightGreen {
+  color: #1CB068 !important;
+}
+
+.pageDescription {
+  font-weight: 500 !important;
+  max-width: 600px;
+  line-height: 1.4 !important;
+  color: #64748B !important;
+  font-size: 0.9rem !important;
+
+  @media (min-width: 900px) {
+    font-size: 1.1rem !important;
+  }
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.suggestBox {
+  padding: 24px !important;
+  border-radius: 12px !important;
+  background-color: rgba(28, 176, 104, 0.03) !important;
+  border: 1px dashed #1CB068 !important;
+  text-align: center;
+  margin-top: 16px !important;
+
+  @media (min-width: 900px) {
+    padding: 48px !important;
+  }
+}
+
+.suggestTitle {
+  font-weight: 900 !important;
+  font-size: 1.1rem !important;
+
+  @media (min-width: 900px) {
+    font-size: 1.5rem !important;
+  }
+}
+
+.suggestText {
+  font-weight: 600 !important;
+  color: #64748B !important;
+  font-size: 0.875rem !important;
+}

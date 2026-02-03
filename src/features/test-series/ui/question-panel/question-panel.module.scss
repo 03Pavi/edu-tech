@@ -1,0 +1,57 @@
+.panel {
+  padding: 16px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.questionLabel {
+  display: block;
+  margin-bottom: 4px !important;
+  color: #1CB068 !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  text-transform: uppercase;
+}
+
+.questionText {
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+}
+
+.optionItem {
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  cursor: pointer;
+  transition: all 0.2s ease !important;
+  border: 1px solid #E2E8F0 !important;
+  background-color: transparent !important;
+
+  &:hover {
+    border-color: #1CB068 !important;
+    background-color: rgba(28, 176, 104, 0.02) !important;
+  }
+}
+
+.optionItemSelected {
+  border-color: #1CB068 !important;
+  background-color: rgba(28, 176, 104, 0.05) !important;
+  border-width: 1px !important;
+}
+
+.optionLabel {
+  width: 100%;
+  margin: 0 !important;
+
+  :global(.MuiFormControlLabel-label) {
+    width: 100%;
+  }
+}
+
+.optionText {
+  font-size: 0.875rem !important;
+}
+
+.optionTextSelected {
+  font-weight: 700 !important;
+}

@@ -1,0 +1,19 @@
+.select {
+  :global(.MuiInputBase-root) {
+
+    &::before,
+    &::after {
+      content: none !important;
+    }
+  }
+}
+
+.option {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-family: "Open Sans", sans-serif !important;
+  font-size: 14px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  padding-left: 10px !important;
+}

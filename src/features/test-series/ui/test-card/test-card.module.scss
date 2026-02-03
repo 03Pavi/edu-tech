@@ -1,0 +1,66 @@
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+
+  &:hover {
+    border-color: #1CB068 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+.cardContent {
+  flex-grow: 1;
+  padding: 16px !important;
+}
+
+.liveChip {
+  font-weight: 700 !important;
+  background-color: rgba(28, 176, 104, 0.05) !important;
+  color: #166534 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  height: 24px !important;
+  font-size: 0.75rem !important;
+}
+
+.title {
+  font-weight: 700 !important;
+  color: #0F172A !important;
+}
+
+.metaStack {
+  margin-top: 16px !important;
+}
+
+.metaIcon {
+  font-size: 16px !important;
+  color: #64748B !important;
+}
+
+.metaText {
+  color: #64748B !important;
+  font-weight: 500 !important;
+}
+
+.actionWrapper {
+  padding: 16px !important;
+  padding-top: 0 !important;
+}
+
+.attemptButton {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 8px !important;
+  background-color: #1CB068 !important;
+  text-transform: none !important;
+  font-weight: 800 !important;
+
+  &:hover {
+    background-color: #16a34a !important;
+  }
+}

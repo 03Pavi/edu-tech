@@ -1,0 +1,178 @@
+// Results Styling
+.resultPaper {
+  padding: 24px !important;
+  border-radius: 8px !important;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid #E2E8F0 !important;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%) !important;
+
+  @media (min-width: 900px) {
+    padding: 64px !important;
+  }
+}
+
+.resultTitle {
+  font-weight: 900 !important;
+  letter-spacing: -1.5px !important;
+  font-size: 2rem !important;
+
+  @media (min-width: 900px) {
+    font-size: 3rem !important;
+  }
+}
+
+.resultSubtitle {
+  margin-bottom: 48px !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+}
+
+.progressWrapper {
+  position: relative;
+  display: inline-flex;
+  margin-bottom: 64px !important;
+}
+
+.progressLabelWrapper {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.accuracyValue {
+  font-weight: 900 !important;
+  font-size: 3rem !important;
+}
+
+.accuracyLabel {
+  font-weight: 800 !important;
+  color: #64748B !important;
+  text-transform: uppercase;
+}
+
+.statCard {
+  padding: 24px !important;
+  border-radius: 8px !important;
+  background-color: white !important;
+  transition: all 0.3s !important;
+  border: 1px solid #E2E8F0 !important;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  }
+}
+
+.performanceBanner {
+  margin-top: 48px !important;
+  padding: 24px !important;
+  background-color: rgba(28, 176, 104, 0.05) !important;
+  border-radius: 8px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border: 1px solid rgba(28, 176, 104, 0.1) !important;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    padding: 32px !important;
+  }
+}
+
+.performanceTitle {
+  font-weight: 800 !important;
+}
+
+.performanceValue {
+  color: #1CB068 !important;
+  font-weight: 900 !important;
+  font-size: 2.125rem !important;
+}
+
+// Examination Styling
+.examHeader {
+  padding: 16px !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+  border-radius: 8px !important;
+  border: 1px solid #E2E8F0 !important;
+  gap: 16px;
+
+  @media (min-width: 600px) {
+    padding: 20px !important;
+  }
+
+  @media (min-width: 900px) {
+    flex-direction: row;
+  }
+}
+
+.examTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.examIconBox {
+  padding: 8px;
+  background-color: rgba(28, 176, 104, 0.1);
+  border-radius: 6px;
+  color: #1CB068;
+  display: flex;
+}
+
+.examTitle {
+  font-weight: 800 !important;
+}
+
+.timerWrapper {
+  width: 100%;
+
+  @media (min-width: 900px) {
+    width: 160px;
+  }
+}
+
+.navigationFooter {
+  padding: 16px !important;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 8px !important;
+  border: 1px solid #E2E8F0 !important;
+
+  @media (min-width: 900px) {
+    padding: 32px !important;
+  }
+}
+
+.navBtn {
+  padding: 9.6px 32px !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+
+  @media (min-width: 600px) {
+    padding: 9.6px 32px !important;
+  }
+}
+
+.navBtnContained {
+  font-weight: 800 !important;
+  background-color: #1CB068 !important;
+
+  &:hover {
+    background-color: #16a34a !important;
+  }
+}

@@ -1,0 +1,45 @@
+.dialog {
+  :global(.MuiPaper-root) {
+    border-radius: 8px !important;
+    padding: 8px !important;
+  }
+}
+
+.title {
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+.contentText {
+  font-weight: 500 !important;
+  color: #64748B !important;
+  line-height: 1.5 !important;
+}
+
+.actions {
+  padding: 16px !important;
+}
+
+.cancelBtn {
+  text-transform: none !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  border: 1px solid #E2E8F0 !important;
+  color: #64748B !important;
+
+  &:hover {
+    background-color: #F8FAFC !important;
+    border-color: #CBD5E1 !important;
+  }
+}
+
+.submitBtn {
+  text-transform: none !important;
+  font-weight: 800 !important;
+  border-radius: 6px !important;
+  background-color: #1CB068 !important;
+
+  &:hover {
+    background-color: #16a34a !important;
+  }
+}

@@ -1,0 +1,72 @@
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease-in-out !important;
+  box-shadow: none !important;
+  border: 1px solid #E2E8F0 !important;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08) !important;
+    border-color: #1CB068 !important;
+
+    .iconBox {
+      background-color: #1CB068 !important;
+      color: white !important;
+    }
+  }
+}
+
+.cardContent {
+  flex-grow: 1;
+  padding: 16px !important;
+}
+
+.iconBox {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(28, 176, 104, 0.05) !important;
+  border-radius: 6px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1CB068 !important;
+  margin-bottom: 16px !important;
+  transition: all 0.3s !important;
+}
+
+.title {
+  font-weight: 800 !important;
+  color: #0F172A !important;
+}
+
+.description {
+  color: #64748B !important;
+  line-height: 1.5 !important;
+}
+
+.actionWrapper {
+  padding: 16px !important;
+  padding-top: 0 !important;
+}
+
+.exploreButton {
+  justify-content: space-between !important;
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+  padding-left: 16px !important;
+  padding-right: 16px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  border-radius: 8px !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+
+  &:hover {
+    background-color: #1CB068 !important;
+    color: white !important;
+  }
+}
