@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Container, Stack, Typography, Box, Paper, Button, Grid, Avatar } from '@mui/material';
+import { Container, Stack, Typography, Box, Paper, Button, Avatar } from '@mui/material';
 import { PageContainer } from '@/shared/ui/page-container';
 import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
 import NoteAddRoundedIcon from '@mui/icons-material/NoteAddRounded';
@@ -13,7 +13,7 @@ import { UploadNotes } from '@/features/notes/ui/upload-notes';
 import Link from 'next/link';
 
 const TeacherStatCard = ({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) => (
-  <Paper sx={{ p: 3, borderRadius: '24px', display: 'flex', alignItems: 'center', gap: 2, border: '1px solid #F1F5F9' }}>
+  <Paper sx={{ p: 3, borderRadius: '24px', display: 'flex', alignItems: 'center', gap: 2, border: '1px solid #F1F5F9', height: '100%' }}>
     <Box sx={{ p: 1.5, borderRadius: '16px', bgcolor: `${color}15`, color: color, display: 'flex' }}>
       {icon}
     </Box>
@@ -33,7 +33,7 @@ export const TeacherDashboard = () => {
       <Container maxWidth="xl" sx={{ py: 6 }}>
         <Stack spacing={5}>
           {/* Header */}
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
             <Box>
               <Typography variant="h3" fontWeight="900" sx={{ mb: 1, letterSpacing: '-1px' }}>Teacher <Box component="span" sx={{ color: '#1CB068' }}>Panel</Box></Typography>
               <Typography variant="h6" color="text.secondary" fontWeight="500">Manage your classroom and teaching materials.</Typography>
@@ -59,23 +59,23 @@ export const TeacherDashboard = () => {
           </Box>
 
           {/* Stats */}
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={4}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33.33% - 16px)' } }}>
               <TeacherStatCard title="Total Students" value="856" icon={<GroupsRoundedIcon />} color="#2563EB" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            </Box>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33.33% - 16px)' } }}>
               <TeacherStatCard title="Upcoming Classes" value="4" icon={<CalendarMonthRoundedIcon />} color="#F59E0B" />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            </Box>
+            <Box sx={{ flex: { xs: '1 1 100%', sm: '1 1 calc(33.33% - 16px)' } }}>
               <TeacherStatCard title="Classes Taken" value="128" icon={<AssignmentTurnedInRoundedIcon />} color="#1CB068" />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {/* Content Management */}
           <Box>
             <Typography variant="h5" fontWeight="800" sx={{ mb: 3 }}>Content Management</Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 12px)' } }}>
                 <Paper
                   onClick={() => setShowUploadNotes(true)}
                   sx={{
@@ -85,6 +85,7 @@ export const TeacherDashboard = () => {
                     bgcolor: '#F8FAFC',
                     border: '1px solid #E2E8F0',
                     transition: 'all 0.2s',
+                    height: '100%',
                     '&:hover': { borderColor: '#1CB068', bgcolor: '#FFFFFF', transform: 'translateY(-4px)' }
                   }}
                 >
@@ -94,8 +95,8 @@ export const TeacherDashboard = () => {
                   <Typography variant="h6" fontWeight="800">Upload Class Notes</Typography>
                   <Typography color="text.secondary" variant="body2">Share PDF, docs, or slide materials with your students.</Typography>
                 </Paper>
-              </Grid>
-              <Grid item xs={12} md={6}>
+              </Box>
+              <Box sx={{ flex: { xs: '1 1 100%', md: '1 1 calc(50% - 12px)' } }}>
                 <Paper
                   onClick={() => setShowUploadRecording(true)}
                   sx={{
@@ -105,6 +106,7 @@ export const TeacherDashboard = () => {
                     bgcolor: '#F8FAFC',
                     border: '1px solid #E2E8F0',
                     transition: 'all 0.2s',
+                    height: '100%',
                     '&:hover': { borderColor: '#7C3AED', bgcolor: '#FFFFFF', transform: 'translateY(-4px)' }
                   }}
                 >
@@ -114,8 +116,8 @@ export const TeacherDashboard = () => {
                   <Typography variant="h6" fontWeight="800">Upload Video Lecture</Typography>
                   <Typography color="text.secondary" variant="body2">Add recorded sessions for students to watch later.</Typography>
                 </Paper>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </Box>
 
           {/* Recent Lectures History */}
