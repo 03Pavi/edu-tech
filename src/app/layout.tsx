@@ -8,11 +8,16 @@ import "./globals.scss";
 export const metadata: Metadata = {
   title: "EduQuest | Premier Test Series",
   description: "Advanced exam preparation platform",
+  manifest: "/manifest.json",
   icons: {
     icon: "/favicon.png",
     shortcut: "/favicon.png",
     apple: "/favicon.png",
   },
+};
+
+export const viewport = {
+  themeColor: "#1CB068",
 };
 
 export default async function RootLayout({

@@ -41,6 +41,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAppSelector } from '@/store/hooks';
 import { logout } from '@/app/auth/actions';
+import { PWAInstallPrompt } from './pwa-install-prompt';
 import styles from './page-container.module.scss';
 
 interface PageContainerProps {
@@ -400,6 +401,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
           </Box>
         </Box>
       </Box>
+      <PWAInstallPrompt />
     </Box>
   );
 };

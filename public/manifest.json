@@ -1,0 +1,21 @@
+{
+  "name": "EduMind PWA",
+  "short_name": "EduMind",
+  "description": "Access Live Classes, Mocks, PYP & Notes for 375+ Exams!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1CB068",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
