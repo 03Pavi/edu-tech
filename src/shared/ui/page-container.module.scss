@@ -34,11 +34,11 @@
 
 .trialButton {
   background-color: #ffffff !important;
-  color: #1CB068 !important;
   font-weight: 800 !important;
   font-size: 0.8rem !important;
   padding: 6px 18px !important;
-  min-width: auto !important;
+  min-width: max-content !important;
+  margin-right: 10px !important;
   border-radius: 100px !important;
   height: auto !important;
   text-transform: none !important;
@@ -68,7 +68,7 @@
 .appBar {
   background-color: white !important;
   border-bottom: 1px solid #E2E8F0 !important;
-  z-index: 1301 !important; // Above drawer
+  z-index: 1100 !important; // Allow drawer overlay
   transition: all 0.3s ease !important;
 }
 

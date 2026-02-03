@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { Container, Stack, Typography, Box, Paper, Button } from '@mui/material';
 import { PageContainer } from '@/shared/ui/page-container';
