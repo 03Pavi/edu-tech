@@ -4,34 +4,54 @@ import React, { useState } from 'react';
 import { Box, Typography, Stack, TextField, InputAdornment } from '@mui/material';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { CourseCard } from './course-card';
-import { MOCK_COURSES } from '../model/mock-data';
 import { Course } from '../types';
 import { useRouter } from 'next/navigation';
+
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchCourses, enrollCourse } from '@/store/courses/course.actions';
+import { CreateCourseModal } from './create-course-modal';
+import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import { Button } from '@mui/material';
 
 interface CoursesSectionProps {
   role: 'student' | 'teacher';
 }
 
 export const CoursesSection: React.FC<CoursesSectionProps> = ({ role }) => {
-  const [courses, setCourses] = useState<Course[]>(MOCK_COURSES);
+  const dispatch = useAppDispatch();
+  const { courses, isLoading } = useAppSelector((state) => state.courses);
+  const currentUser = useAppSelector((state) => state.user);
   const [search, setSearch] = useState('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const router = useRouter();
 
-  const handleJoin = (id: string) => {
-    setCourses(prev => prev.map(c =>
-      c.id === id ? { ...c, isJoined: true } : c
-    ));
-    // In a real app, this would route to course details or join API
+  React.useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
+  const handleJoin = async (id: string) => {
+    try {
+      await dispatch(enrollCourse(id)).unwrap();
+    } catch (error: any) {
+      console.error("Enrollment failed:", error);
+    }
   };
 
   const handleGoLive = (id: string) => {
     router.push(`/live-classes/start?courseId=${id}`);
   };
 
-  const filteredCourses = courses.filter(c =>
-    c.title.toLowerCase().includes(search.toLowerCase()) ||
-    c.category?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredCourses = courses.filter((c: Course) => {
+    const matchesSearch = c.title.toLowerCase().includes(search.toLowerCase()) ||
+      (c.category && c.category.toLowerCase().includes(search.toLowerCase()));
+
+    if (role === 'teacher') {
+      // Only show courses taught by this teacher
+      return matchesSearch && c.instructor?.id === currentUser.id;
+    }
+
+    return matchesSearch;
+  });
 
   return (
     <Box sx={{ py: 4 }}>
@@ -44,28 +64,45 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({ role }) => {
             {role === 'teacher' ? 'Manage your teaching sessions and content.' : 'Pick a course and start your learning journey today.'}
           </Typography>
         </Box>
-        <TextField
-          placeholder="Search courses..."
-          variant="outlined"
-          size="small"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          sx={{
-            width: { xs: '100%', sm: 300 },
-            '& .MuiOutlinedInput-root': { borderRadius: '12px' }
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchRoundedIcon sx={{ color: 'text.secondary' }} />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <Stack direction="row" spacing={2} sx={{ width: { xs: '100%', sm: 'auto' } }}>
+          <TextField
+            placeholder="Search courses..."
+            variant="outlined"
+            size="small"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{
+              width: { xs: '100%', sm: 300 },
+              '& .MuiOutlinedInput-root': { borderRadius: '12px' }
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchRoundedIcon sx={{ color: 'text.secondary' }} />
+                </InputAdornment>
+              ),
+            }}
+          />
+          {role === 'teacher' && (
+            <Button
+              variant="contained"
+              startIcon={<AddRoundedIcon />}
+              onClick={() => setShowCreateModal(true)}
+              sx={{
+                bgcolor: '#1E293B',
+                borderRadius: '12px',
+                px: 3,
+                '&:hover': { bgcolor: '#0F172A' }
+              }}
+            >
+              New Course
+            </Button>
+          )}
+        </Stack>
       </Stack>
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
-        {filteredCourses.map((course) => (
+        {filteredCourses.map((course: Course) => (
           <Box
             key={course.id}
             sx={{
@@ -77,20 +114,28 @@ export const CoursesSection: React.FC<CoursesSectionProps> = ({ role }) => {
             }}
           >
             <CourseCard
-              course={course}
+              course={course as any}
               role={role}
-              onJoin={handleJoin}
-              onGoLive={handleGoLive}
+              onJoin={() => handleJoin(course.id.toString())}
+              onGoLive={() => handleGoLive(course.id.toString())}
             />
           </Box>
         ))}
       </Box>
 
-      {filteredCourses.length === 0 && (
+      {filteredCourses.length === 0 && !isLoading && (
         <Box sx={{ textAlign: 'center', py: 8 }}>
           <Typography variant="h6" color="text.secondary">No courses found matching your search.</Typography>
         </Box>
       )}
+
+      {isLoading && (
+        <Box sx={{ textAlign: 'center', py: 8 }}>
+          <Typography variant="h6" color="text.secondary">Loading courses...</Typography>
+        </Box>
+      )}
+
+      <CreateCourseModal open={showCreateModal} onClose={() => setShowCreateModal(false)} />
     </Box>
   );
 };

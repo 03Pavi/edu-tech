@@ -2,6 +2,7 @@
 import React from 'react';
 import { CourseDetails } from '@/features/courses/ui/course-details';
 
-export default function CoursePage({ params }: { params: { id: string } }) {
-  return <CourseDetails courseId={params.id} />;
+export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <CourseDetails courseId={id} />;
 }

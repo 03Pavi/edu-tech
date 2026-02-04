@@ -1,28 +1,52 @@
 
 'use client';
 
-import React from 'react';
 import {
   Box,
   Paper,
   Typography,
   TextField,
   Button,
-  Stack,
-  Divider,
-  FormControlLabel,
-  Checkbox
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styles from '../auth.module.scss';
 import Image from 'next/image';
-import { login } from '../actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { loginUser } from '@/store/auth/auth.actions';
+import { useState, FormEvent } from 'react';
 
 export default function LoginPage() {
-  const [email, setEmail] = React.useState('user@example.com');
-  const [password, setPassword] = React.useState('password123');
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const result = await dispatch(loginUser({ email, password }));
+
+    if (loginUser.fulfilled.match(result)) {
+      router.push('/dashboard');
+      router.refresh();
+    }
+  };
+
+  const handleSocialAuth = (provider: string) => {
+    setShowNotification(true);
+  };
 
   return (
     <Box className={styles.authPage}>
@@ -66,33 +90,14 @@ export default function LoginPage() {
             </Box>
             <Typography variant="h5" fontWeight="900" color="#1E293B">Welcome Back</Typography>
             <Typography variant="body2" color="#64748B">Please enter your details to sign in.</Typography>
-
-            <Paper elevation={0} sx={{ mt: 2, p: 2, bgcolor: '#F1F5F9', borderRadius: '8px', border: '1px dashed #CBD5E1', textAlign: 'left' }}>
-              <Typography variant="caption" color="text.secondary" display="block" fontWeight="700" sx={{ mb: 1 }}>
-                Demo Credentials:
-              </Typography>
-              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1 }}>
-                <Box>
-                  <Typography variant="caption" display="block" fontWeight="600">User:</Typography>
-                  <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>user@example.com</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" display="block" fontWeight="600">Admin:</Typography>
-                  <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>admin@example.com</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" display="block" fontWeight="600">Teacher:</Typography>
-                  <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>teacher@example.com</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" display="block" fontWeight="600">Password:</Typography>
-                  <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>password123</Typography>
-                </Box>
-              </Box>
-            </Paper>
           </Box>
 
-          <form action={login}>
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <Box sx={{ mb: 2, p: 1, bgcolor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 1, color: '#DC2626', fontSize: '0.875rem' }}>
+                {error}
+              </Box>
+            )}
             <Box className={styles.formField}>
               <Typography className={styles.formLabel}>Email Address</Typography>
               <TextField
@@ -104,6 +109,7 @@ export default function LoginPage() {
                 size="small"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
               />
             </Box>
             <Box className={styles.formField}>
@@ -112,15 +118,27 @@ export default function LoginPage() {
                 fullWidth
                 name="password"
                 placeholder="••••••••"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 variant="outlined"
                 required
                 size="small"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        size="small"
+                      >
+                        {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
               />
-              {/* Hidden field to pass name for demo purposes, could be fetched from DB in real app */}
-              <input type="hidden" name="name" value={email.includes('admin') ? 'Admin User' : (email.includes('teacher') ? 'Prof. Teacher' : 'John Doe')} />
               <Box sx={{ textAlign: 'right', mt: 1 }}>
                 <Link href="#" className={styles.linkText} style={{ fontSize: '0.8rem' }}>
                   Forgot Password?
@@ -133,8 +151,9 @@ export default function LoginPage() {
               type="submit"
               variant="contained"
               className={styles.submitButton}
+              disabled={isLoading}
             >
-              Sign In
+              {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
 
@@ -145,6 +164,7 @@ export default function LoginPage() {
               variant="outlined"
               className={styles.socialButton}
               startIcon={<GoogleIcon sx={{ color: '#DB4437' }} />}
+              onClick={() => handleSocialAuth('Google')}
             >
               Google
             </Button>
@@ -152,6 +172,7 @@ export default function LoginPage() {
               variant="outlined"
               className={styles.socialButton}
               startIcon={<LinkedInIcon sx={{ color: '#0077B5' }} />}
+              onClick={() => handleSocialAuth('LinkedIn')}
             >
               LinkedIn
             </Button>
@@ -165,8 +186,20 @@ export default function LoginPage() {
               </Link>
             </Typography>
           </Box>
-        </Box>
+        </Box >
       </Paper >
+
+      <Snackbar
+        open={showNotification}
+        autoHideDuration={3000}
+        onClose={() => setShowNotification(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setShowNotification(false)} severity="info" sx={{ width: '100%' }}>
+          This feature is currently under development. Please use email login.
+        </Alert>
+      </Snackbar>
     </Box >
   );
 }
+

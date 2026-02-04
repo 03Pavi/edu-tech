@@ -40,8 +40,14 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
 import { logout } from '@/app/auth/actions';
+import { fetchActiveBanners } from '@/store/cms/banner.actions';
+import { UserRole } from '@/app/api/domain/auth/user-role.enum';
+import { clearError as clearAuthError } from '@/store/auth/auth.slice';
+import { clearCourseError } from '@/store/courses/course.slice';
+import { clearTestSeriesError } from '@/store/test-series/test-series.slice';
+import { clearBannerError } from '@/store/cms/banner.slice';
 import styles from './page-container.module.scss';
 
 interface PageContainerProps {
@@ -53,11 +59,27 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const user = useAppSelector((state) => state.user);
+  const { activeBanners = [] } = useAppSelector((state) => state.banners || {});
+  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
   });
+
+  React.useEffect(() => {
+    dispatch(fetchActiveBanners());
+  }, [dispatch]);
+
+  // Clear errors on page change
+  React.useEffect(() => {
+    dispatch(clearAuthError());
+    dispatch(clearCourseError());
+    dispatch(clearTestSeriesError());
+    dispatch(clearBannerError());
+  }, [dispatch, pathname]);
+
+  const activeBanner = activeBanners?.[0]; // Show the most recent active banner
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -156,7 +178,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
           })}
         </List>
 
-        {user.role === 'user' && (
+        {user?.role === UserRole.STUDENT && (
           <Box sx={{ mt: 4, p: 2, bgcolor: '#F8FAFC', borderRadius: '16px' }}>
             <Typography variant="caption" fontWeight="800" color="#64748B" display="block" gutterBottom>
               FREE PLAN
@@ -175,22 +197,36 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
       {/* Sticky Header Wrapper */}
       <Box sx={{ position: 'sticky', top: 0, zIndex: 1300 }}>
         {/* Top Banner */}
-        {showBanner && (
-          <Box className={styles.topBanner}>
-            <Typography className={styles.bannerText}>
-              🚀 Access Live Classes, Mocks, PYP & Notes for 375+ Exams!
-            </Typography>
-            <Button
-              size="small"
-              variant="contained"
-              className={styles.trialButton}
+        {showBanner && activeBanner && (
+          <Box
+            className={styles.topBanner}
+            sx={{
+              bgcolor: activeBanner.backgroundColor || undefined,
+              color: activeBanner.textColor || undefined
+            }}
+          >
+            <Typography
+              className={styles.bannerText}
+              sx={{ color: activeBanner.textColor || 'inherit' }}
             >
-              Start ₹1 Trial
-            </Button>
+              {activeBanner.text}
+            </Typography>
+            {activeBanner.buttonText && (
+              <Button
+                size="small"
+                variant="contained"
+                className={styles.trialButton}
+                component={activeBanner.link ? Link : 'button'}
+                href={activeBanner.link || '#'}
+              >
+                {activeBanner.buttonText}
+              </Button>
+            )}
             <IconButton
               size="small"
               onClick={() => setShowBanner(false)}
               className={styles.closeBanner}
+              sx={{ color: activeBanner.textColor || 'inherit' }}
             >
               <CloseIcon sx={{ fontSize: 14 }} />
             </IconButton>
@@ -255,7 +291,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
                   <KeyboardArrowDownIcon sx={{ fontSize: 14 }} />
                 </IconButton>
 
-                {!user.isAuthenticated ? (
+                {!user?.isAuthenticated ? (
                   <Button
                     variant="contained"
                     href="/auth/login"
@@ -280,7 +316,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
                         '&:hover': { transform: 'scale(1.1)' }
                       }}
                     >
-                      {user.name?.[0]?.toUpperCase() || 'U'}
+                      {user?.name?.[0]?.toUpperCase() || 'U'}
                     </Avatar>
 
                     <Menu
@@ -302,10 +338,10 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
                     >
                       <Box sx={{ px: 2, py: 1.5 }}>
                         <Typography variant="body1" fontWeight="800" color="#1B2559">
-                          {user.name}
+                          {user?.name}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {user.role?.toUpperCase()} • Premium Member
+                          {user?.role?.toUpperCase()} • Premium Member
                         </Typography>
                       </Box>
                       <Divider sx={{ my: 1, borderColor: '#F1F5F9' }} />
@@ -345,7 +381,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         {/* Sidebar - Desktop Permanent / Mobile Temporary */}
-        {user.isAuthenticated && (
+        {user?.isAuthenticated && (
           <Box
             component="nav"
             sx={{ width: { lg: drawerWidth }, flexShrink: { lg: 0 } }}

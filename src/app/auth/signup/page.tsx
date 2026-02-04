@@ -9,22 +9,61 @@ import {
   TextField,
   Button,
   Stack,
-  Divider,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  IconButton,
+  InputAdornment,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import styles from '../auth.module.scss';
-import { login } from '../actions';
+import { registerUser, loginUser } from '@/store/auth/auth.actions';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 export default function SignupPage() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { isLoading, error } = useAppSelector((state) => state.user);
+
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [firstName, setFirstName] = React.useState('');
   const [lastName, setLastName] = React.useState('');
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [showNotification, setShowNotification] = React.useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // 1. Register
+    const registerResult = await dispatch(registerUser({
+      email,
+      password,
+      name: `${firstName} ${lastName}`.trim(),
+      role: 'student'
+    }));
+
+    if (registerUser.fulfilled.match(registerResult)) {
+      // 2. Login immediately after registration
+      const loginResult = await dispatch(loginUser({ email, password }));
+
+      if (loginUser.fulfilled.match(loginResult)) {
+        router.push('/dashboard');
+        router.refresh();
+      }
+    }
+  };
+
+  const handleSocialAuth = (provider: string) => {
+    setShowNotification(true);
+  };
 
   return (
     <Box className={styles.authPage}>
@@ -70,8 +109,12 @@ export default function SignupPage() {
             <Typography variant="body2" color="#64748B">Fill in the details to start your journey.</Typography>
           </Box>
 
-          <form action={login}>
-            <input type="hidden" name="name" value={`${firstName} ${lastName}`} />
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <Box sx={{ mb: 2, p: 1, bgcolor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 1, color: '#DC2626', fontSize: '0.875rem' }}>
+                {error}
+              </Box>
+            )}
             <Stack>
               <Box className={styles.formField}>
                 <Typography className={styles.formLabel}>Full Name</Typography>
@@ -84,6 +127,7 @@ export default function SignupPage() {
                     size="small"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    disabled={isLoading}
                   />
                   <TextField
                     fullWidth
@@ -92,6 +136,7 @@ export default function SignupPage() {
                     size="small"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    disabled={isLoading}
                   />
                 </Stack>
               </Box>
@@ -108,6 +153,7 @@ export default function SignupPage() {
                   size="small"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={isLoading}
                 />
               </Box>
 
@@ -117,12 +163,26 @@ export default function SignupPage() {
                   fullWidth
                   name="password"
                   placeholder="••••••••"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   variant="outlined"
                   required
                   size="small"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLoading}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          size="small"
+                        >
+                          {showPassword ? <VisibilityOffIcon fontSize="small" /> : <VisibilityIcon fontSize="small" />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
                 />
               </Box>
             </Stack>
@@ -142,8 +202,9 @@ export default function SignupPage() {
               type="submit"
               variant="contained"
               className={styles.submitButton}
+              disabled={isLoading}
             >
-              Get Started
+              {isLoading ? 'Creating Account...' : 'Get Started'}
             </Button>
           </form>
 
@@ -154,6 +215,7 @@ export default function SignupPage() {
               variant="outlined"
               className={styles.socialButton}
               startIcon={<GoogleIcon sx={{ color: '#DB4437' }} />}
+              onClick={() => handleSocialAuth('Google')}
             >
               Google
             </Button>
@@ -161,6 +223,7 @@ export default function SignupPage() {
               variant="outlined"
               className={styles.socialButton}
               startIcon={<LinkedInIcon sx={{ color: '#0077B5' }} />}
+              onClick={() => handleSocialAuth('LinkedIn')}
             >
               LinkedIn
             </Button>
@@ -176,6 +239,17 @@ export default function SignupPage() {
           </Box>
         </Box>
       </Paper>
+
+      <Snackbar
+        open={showNotification}
+        autoHideDuration={3000}
+        onClose={() => setShowNotification(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setShowNotification(false)} severity="info" sx={{ width: '100%' }}>
+          This feature is currently under development. Please use email registration.
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

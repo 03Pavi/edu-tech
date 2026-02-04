@@ -2,18 +2,18 @@
 
 import { getSession } from "@/app/actions";
 import { redirect } from "next/navigation";
-import { UserRole } from "@/store/slices/user-slice";
+import { UserRole } from "@/app/api/domain/auth/user-role.enum";
 
 export async function login(formData: FormData) {
   const session = await getSession();
   const email = formData.get("email") as string;
   const name = formData.get("name") as string || "User";
 
-  let role: UserRole = 'user';
+  let role: UserRole = UserRole.STUDENT;
   if (email.includes('admin')) {
-    role = 'admin';
+    role = UserRole.ADMIN;
   } else if (email.includes('teacher')) {
-    role = 'teacher';
+    role = UserRole.TEACHER;
   }
 
   session.isLoggedIn = true;

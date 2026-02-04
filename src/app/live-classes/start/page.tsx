@@ -4,25 +4,51 @@ import React, { useState } from 'react';
 import { Container, Stack, Typography, Box, Paper, TextField, Button, MenuItem } from '@mui/material';
 import { PageContainer } from '@/shared/ui/page-container';
 import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { MOCK_COURSES } from '@/features/courses/model/mock-data';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchCourses, addLiveClass } from '@/store/courses/course.actions';
 
 export default function StartClassPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
+  const { courses } = useAppSelector((state) => state.courses);
+
   const courseId = searchParams.get('courseId');
   const [loading, setLoading] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState(courseId || '1');
+  const [formData, setFormData] = useState({
+    title: '',
+    courseId: courseId || '',
+    description: '',
+    startTime: new Date().toISOString(),
+    endTime: new Date(Date.now() + 3600000).toISOString(), // 1 hour later
+  });
 
-  const handleStartClass = () => {
+  React.useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
+  const handleStartClass = async () => {
+    if (!formData.title || !formData.courseId) return;
     setLoading(true);
-    // Simulate setup
-    setTimeout(() => {
-      // Generate a random class ID or use a fixed one for demo
-      const classId = 'maths-101-session-' + Math.floor(Math.random() * 1000);
-      router.push(`/live-classes/${classId}?role=teacher`);
-    }, 1500);
+
+    try {
+      const result = await dispatch(addLiveClass({
+        courseId: formData.courseId,
+        data: {
+          title: formData.title,
+          startTime: formData.startTime,
+          endTime: formData.endTime,
+          meetingLink: `https://meet.jit.si/${formData.courseId}-${Date.now()}`
+        }
+      })).unwrap();
+
+      router.push(`/live-classes/${result.id}?role=teacher`);
+    } catch (error) {
+      console.error('Failed to start live class:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,17 +77,19 @@ export default function StartClassPage() {
                 fullWidth
                 placeholder="e.g. Advanced Calculus - Lecture 3"
                 variant="outlined"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
 
               <TextField
                 select
                 fullWidth
                 label="Select Course/Batch"
-                value={selectedCourse}
-                onChange={(e) => setSelectedCourse(e.target.value)}
+                value={formData.courseId}
+                onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
               >
-                {MOCK_COURSES.map((course) => (
-                  <MenuItem key={course.id} value={course.id}>
+                {courses.map((course: any) => (
+                  <MenuItem key={course.id} value={course.id.toString()}>
                     {course.title}
                   </MenuItem>
                 ))}
@@ -73,6 +101,8 @@ export default function StartClassPage() {
                 multiline
                 rows={3}
                 placeholder="Topics covered in this session..."
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </Stack>
 
@@ -82,7 +112,7 @@ export default function StartClassPage() {
                 variant="contained"
                 size="large"
                 onClick={handleStartClass}
-                disabled={loading}
+                disabled={loading || !formData.title || !formData.courseId}
                 sx={{
                   bgcolor: '#EF4444',
                   py: 1.5,

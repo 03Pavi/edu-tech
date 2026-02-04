@@ -31,13 +31,13 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, role, onJoin, on
       <CardContent sx={{ p: 3 }}>
         <Stack direction="row" justifyContent="space-between" alignItems="flex-start" sx={{ mb: 2 }}>
           <Chip
-            label={course.category}
+            label={course.category || 'General'}
             size="small"
             sx={{ bgcolor: '#1CB06815', color: '#1CB068', fontWeight: 700, borderRadius: '8px' }}
           />
           <Stack direction="row" spacing={0.5} alignItems="center">
             <GroupsRoundedIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
-            <Typography variant="caption" color="text.secondary" fontWeight="600">{course.studentsCount}</Typography>
+            <Typography variant="caption" color="text.secondary" fontWeight="600">{(course as any).studentsCount || 0}</Typography>
           </Stack>
         </Stack>
 
@@ -48,7 +48,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, role, onJoin, on
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
           <AccountCircleRoundedIcon sx={{ fontSize: 20, color: 'text.secondary' }} />
           <Typography variant="body2" color="text.secondary" fontWeight="600">
-            {course.teacherName}
+            {course.instructor?.name || 'Instructor'}
           </Typography>
         </Stack>
 
@@ -56,31 +56,31 @@ export const CourseCard: React.FC<CourseCardProps> = ({ course, role, onJoin, on
           {role === 'student' ? (
             <Button
               fullWidth
-              variant={course.isJoined ? "outlined" : "contained"}
+              variant={(course as any).isJoined ? "outlined" : "contained"}
               onClick={() => {
-                if (course.isJoined) {
+                if ((course as any).isJoined) {
                   router.push(`/courses/${course.id}`);
                 } else if (onJoin) {
-                  onJoin(course.id);
+                  onJoin(course.id.toString());
                 }
               }}
               sx={{
                 borderRadius: '12px',
                 py: 1.5,
                 fontWeight: 900,
-                bgcolor: course.isJoined ? 'transparent' : '#1CB068',
+                bgcolor: (course as any).isJoined ? 'transparent' : '#1CB068',
                 borderColor: '#1CB068',
-                color: course.isJoined ? '#1CB068' : 'white',
-                '&:hover': { bgcolor: course.isJoined ? '#1CB06810' : '#16a34a' }
+                color: (course as any).isJoined ? '#1CB068' : 'white',
+                '&:hover': { bgcolor: (course as any).isJoined ? '#1CB06810' : '#16a34a' }
               }}
             >
-              {course.isJoined ? 'Enter Course' : 'Join Course'}
+              {(course as any).isJoined ? 'Enter Course' : 'Join Course'}
             </Button>
           ) : (
             <Button
               fullWidth
               variant="contained"
-              onClick={() => onGoLive && onGoLive(course.id)}
+              onClick={() => onGoLive && onGoLive(course.id.toString())}
               sx={{
                 borderRadius: '12px',
                 py: 1.5,

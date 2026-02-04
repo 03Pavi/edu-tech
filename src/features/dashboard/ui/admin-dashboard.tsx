@@ -7,6 +7,13 @@ import RecordVoiceOverRoundedIcon from '@mui/icons-material/RecordVoiceOverRound
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import { CreateTestSeriesModal } from '@/features/test-series/ui/create-test-series-modal';
+import { CreateBannerModal } from './create-banner-modal';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchAllBanners, updateBanner, deleteBanner } from '@/store/cms/banner.actions';
+import { useEffect } from 'react';
 
 const StatCard = ({ title, value, icon, color, subValue }: { title: string, value: string, icon: React.ReactNode, color: string, subValue?: string }) => (
   <Paper sx={{ p: 4, borderRadius: '24px', position: 'relative', overflow: 'hidden', height: '100%', border: '1px solid #F1F5F9' }}>
@@ -26,7 +33,14 @@ const StatCard = ({ title, value, icon, color, subValue }: { title: string, valu
 );
 
 export const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('users');
+  const dispatch = useAppDispatch();
+  const { allBanners } = useAppSelector((state) => state.banners);
+  const [showCreateTestModal, setShowCreateTestModal] = useState(false);
+  const [showCreateBannerModal, setShowCreateBannerModal] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchAllBanners());
+  }, [dispatch]);
 
   const teachers = [
     { name: 'Prof. Rajesh Kumar', subject: 'Mathematics', students: '1.2k', status: 'Active', lectures: 128 },
@@ -45,9 +59,45 @@ export const AdminDashboard = () => {
       <Container maxWidth="xl" sx={{ py: 6 }}>
         <Stack spacing={6}>
           {/* Header */}
-          <Box>
-            <Typography variant="h3" fontWeight="900" sx={{ mb: 1, letterSpacing: '-1.5px' }}>Platform <Box component="span" sx={{ color: '#1CB068' }}>Overview</Box></Typography>
-            <Typography variant="h6" color="text.secondary" fontWeight="500">Global statistics and management center.</Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Box>
+              <Typography variant="h3" fontWeight="900" sx={{ mb: 1, letterSpacing: '-1.5px' }}>Platform <Box component="span" sx={{ color: '#1CB068' }}>Overview</Box></Typography>
+              <Typography variant="h6" color="text.secondary" fontWeight="500">Global statistics and management center.</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="outlined"
+                startIcon={<CampaignRoundedIcon />}
+                onClick={() => setShowCreateBannerModal(true)}
+                sx={{
+                  color: '#1CB068',
+                  borderColor: '#1CB068',
+                  borderRadius: '16px',
+                  px: 3,
+                  py: 1.5,
+                  fontWeight: 900,
+                  '&:hover': { borderColor: '#16a34a', bgcolor: 'rgba(28, 176, 104, 0.05)' }
+                }}
+              >
+                New Banner
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<AddCircleRoundedIcon />}
+                onClick={() => setShowCreateTestModal(true)}
+                sx={{
+                  bgcolor: '#1CB068',
+                  borderRadius: '16px',
+                  px: 3,
+                  py: 1.5,
+                  fontWeight: 900,
+                  boxShadow: '0 10px 25px rgba(28, 176, 104, 0.2)',
+                  '&:hover': { bgcolor: '#16a34a' }
+                }}
+              >
+                New Mock Test
+              </Button>
+            </Box>
           </Box>
 
           {/* Core Metrics */}
@@ -66,9 +116,73 @@ export const AdminDashboard = () => {
             </Box>
           </Box>
 
+          {/* Banner Management */}
+          <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
+              <Typography variant="h5" fontWeight="800">Banner Management</Typography>
+              <Chip label={`${allBanners.length} Total`} size="small" sx={{ fontWeight: 800 }} />
+            </Box>
+            {allBanners.length > 0 ? (
+              <Stack spacing={2}>
+                {allBanners.map((banner: any) => (
+                  <Box key={banner.id} sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    p: 2,
+                    borderRadius: '20px',
+                    bgcolor: '#F8FAFC',
+                    border: '1px solid #E2E8F0'
+                  }}>
+                    <Box sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '10px',
+                      bgcolor: banner.backgroundColor || '#eee',
+                      border: '1px solid #ddd'
+                    }} />
+                    <Box sx={{ flex: 1 }}>
+                      <Typography fontWeight="800" variant="body2">{banner.text}</Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {banner.link ? `Link: ${banner.link}` : 'No link'}
+                      </Typography>
+                    </Box>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Chip
+                        label={banner.isActive ? "Active" : "Inactive"}
+                        size="small"
+                        onClick={() => dispatch(updateBanner({ id: banner.id, data: { isActive: !banner.isActive } }))}
+                        sx={{
+                          cursor: 'pointer',
+                          fontWeight: 800,
+                          bgcolor: banner.isActive ? '#1CB06815' : '#F1F5F9',
+                          color: banner.isActive ? '#1CB068' : '#64748B',
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="error"
+                        onClick={() => {
+                          if (window.confirm('Delete this banner?')) {
+                            dispatch(deleteBanner(banner.id));
+                          }
+                        }}
+                      >
+                        <MoreVertRoundedIcon sx={{ transform: 'rotate(90deg)' }} fontSize="small" />
+                      </IconButton>
+                    </Stack>
+                  </Box>
+                ))}
+              </Stack>
+            ) : (
+              <Box sx={{ py: 4, textAlign: 'center', color: 'text.secondary' }}>
+                <Typography variant="body2" fontWeight="600">No banners created yet.</Typography>
+              </Box>
+            )}
+          </Paper>
+
           {/* Lists Section */}
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-            {/* Teacher Management */}
             <Box sx={{ flex: { xs: '1 1 100%', lg: '1 1 calc(58.333% - 16px)' } }}>
               <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9', height: '100%' }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
@@ -106,7 +220,6 @@ export const AdminDashboard = () => {
               </Paper>
             </Box>
 
-            {/* New Registrations */}
             <Box sx={{ flex: { xs: '1 1 100%', lg: '1 1 calc(41.666% - 16px)' } }}>
               <Paper sx={{ p: 4, borderRadius: '32px', bgcolor: '#0F172A', color: 'white', height: '100%' }}>
                 <Typography variant="h5" fontWeight="800" sx={{ mb: 4 }}>New Students</Typography>
@@ -136,7 +249,6 @@ export const AdminDashboard = () => {
             </Box>
           </Box>
 
-          {/* Resource Usage / Live Map Simulation */}
           <Paper sx={{ p: 4, borderRadius: '32px', border: '1px solid #F1F5F9' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h5" fontWeight="800">System Live Status</Typography>
@@ -156,6 +268,8 @@ export const AdminDashboard = () => {
             </Box>
           </Paper>
         </Stack>
+        <CreateTestSeriesModal open={showCreateTestModal} onClose={() => setShowCreateTestModal(false)} />
+        <CreateBannerModal open={showCreateBannerModal} onClose={() => setShowCreateBannerModal(false)} />
       </Container>
     </PageContainer>
   );

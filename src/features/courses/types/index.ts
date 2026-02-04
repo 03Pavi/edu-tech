@@ -1,15 +1,24 @@
 
 export interface Course {
-  id: string;
+  id: number;
   title: string;
   description: string;
-  teacherId: string;
-  teacherName: string;
-  thumbnail?: string;
-  price?: number;
   category?: string;
-  studentsCount: number;
+  price: number;
+  thumbnail?: string;
+  instructor?: {
+    id: number;
+    name: string;
+    email: string;
+  };
+  students?: any[];
+  studentsCount?: number;
   isJoined?: boolean;
+  teacherName?: string;
+  liveClasses?: any[];
+  recordedClasses?: any[];
+  notes?: any[];
+  createdAt?: string;
 }
 
 export interface ClassSession {

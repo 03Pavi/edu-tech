@@ -1,7 +1,6 @@
 
 'use client';
 
-import React from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { Container, Stack, Typography, Box, Breadcrumbs, Link as MuiLink } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';

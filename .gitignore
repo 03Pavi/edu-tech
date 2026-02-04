@@ -8,3 +8,4 @@ coverage
 /etc/secrets
 
   
+/src/generated/prisma

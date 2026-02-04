@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import type { Metadata } from "next";
 import StoreProvider from "@/shared/providers/store-provider";
 import ThemeProvider from "@/shared/providers/theme-provider";
@@ -29,7 +30,9 @@ export default async function RootLayout({
           <SessionSync
             session={{
               isLoggedIn: session.isLoggedIn,
+              id: session.id,
               name: session.name,
+              email: session.email,
               role: session.role
             }} />
           <ThemeProvider>

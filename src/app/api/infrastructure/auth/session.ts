@@ -1,17 +1,20 @@
 import { SessionOptions } from "iron-session";
+import { UserRole } from "@prisma/client";
 
 export interface User {
+  id: number;
   isLoggedIn: boolean;
   name: string;
   email: string;
-  role: 'user' | 'admin' | 'teacher';
+  role: UserRole;
 }
 
 export const defaultSession: User = {
+  id: 0,
   isLoggedIn: false,
   name: "",
   email: "",
-  role: "user",
+  role: UserRole.STUDENT,
 };
 
 export const sessionOptions: SessionOptions = {

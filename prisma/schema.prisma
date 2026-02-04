@@ -1,0 +1,154 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      UserRole @default(STUDENT)
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  // Relations
+  taughtCourses   Course[]         @relation("InstructorCourses")
+  enrolledCourses CourseEnrollment[]
+  
+  @@map("users")
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  price       Int      @default(0)
+  thumbnail   String?
+  instructorId Int?
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  // Relations
+  instructor      User?              @relation("InstructorCourses", fields: [instructorId], references: [id])
+  students        CourseEnrollment[]
+  liveClasses     LiveClass[]
+  recordedClasses RecordedClass[]
+  notes           Note[]
+  testSeries      TestSeries[]
+
+  @@map("courses")
+}
+
+model CourseEnrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  courseId  Int
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@map("course_enrollments")
+}
+
+model LiveClass {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  scheduledAt DateTime
+  meetingLink String?
+  courseId    Int
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("live_classes")
+}
+
+model RecordedClass {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  videoUrl    String?
+  duration    Int?
+  courseId    Int
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("recorded_classes")
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  fileUrl   String?
+  courseId  Int
+  createdAt DateTime @default(now()) @map("createdAt")
+  updatedAt DateTime @updatedAt @map("updatedAt")
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
+
+model TestSeries {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  duration    Int?
+  totalMarks  Int?
+  courseId    Int
+  createdAt   DateTime @default(now()) @map("createdAt")
+  updatedAt   DateTime @updatedAt @map("updatedAt")
+
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions Question[]
+
+  @@map("test_series")
+}
+
+model Question {
+  id           Int     @id @default(autoincrement())
+  questionText String  @db.Text
+  options      String[] // Array of options
+  correctAnswer String
+  marks        Int     @default(1)
+  testSeriesId Int
+
+  testSeries TestSeries @relation(fields: [testSeriesId], references: [id], onDelete: Cascade)
+
+  @@map("questions")
+}
+
+model Banner {
+  id              Int      @id @default(autoincrement())
+  text            String
+  link            String?
+  buttonText      String?
+  isActive        Boolean  @default(true)
+  backgroundColor String?
+  textColor       String?
+  createdAt       DateTime @default(now()) @map("createdAt")
+  updatedAt       DateTime @updatedAt @map("updatedAt")
+
+  @@map("banners")
+}

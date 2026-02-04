@@ -1,7 +1,7 @@
 
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
-import { defaultSession, sessionOptions, User } from "@/lib/session";
+import { defaultSession, sessionOptions, User } from "@/app/api/infrastructure/auth/session";
 
 export async function getSession() {
   const session = await getIronSession<User>(await cookies(), sessionOptions);
