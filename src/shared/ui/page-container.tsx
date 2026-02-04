@@ -29,6 +29,7 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import LiveTvRoundedIcon from '@mui/icons-material/LiveTvRounded';
 import VideoLibraryRoundedIcon from '@mui/icons-material/VideoLibraryRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import {
   Drawer,
   List,
@@ -81,6 +82,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
     { label: 'Test Series', icon: <AssignmentRoundedIcon />, href: '/test-series' },
     { label: 'Live Classes', icon: <LiveTvRoundedIcon />, href: '/live-classes' },
     { label: 'Recorded Classes', icon: <VideoLibraryRoundedIcon />, href: '/recorded-classes' },
+    { label: 'Courses', icon: <SchoolRoundedIcon />, href: '/courses' },
   ];
 
   const drawerWidth = 280;
@@ -233,10 +235,10 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
               {/* Nav Items - Desktop Only */}
               <Stack direction="row" className={styles.navItems}>
-                {['Exams', 'SuperCoaching', 'Test Series', 'Live Classes', 'Recorded', 'Dashboard', 'More'].map((item) => (
+                {['Exams', 'Courses', 'Test Series', 'Live Classes', 'Recorded', 'Dashboard', 'More'].map((item) => (
                   <Button
                     key={item}
-                    href={item === 'Dashboard' ? '/dashboard' : item === 'Test Series' ? '/test-series' : item === 'Live Classes' ? '/live-classes' : item === 'Recorded' ? '/recorded-classes' : '#'}
+                    href={item === 'Dashboard' ? '/dashboard' : item === 'Courses' ? '/courses' : item === 'Test Series' ? '/test-series' : item === 'Live Classes' ? '/live-classes' : item === 'Recorded' ? '/recorded-classes' : '#'}
                     component={Link}
                     endIcon={['Exams', 'Pass', 'More'].includes(item) ? <KeyboardArrowDownIcon /> : null}
                     className={styles.navButton}

@@ -10,6 +10,7 @@ import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import AssignmentTurnedInRoundedIcon from '@mui/icons-material/AssignmentTurnedInRounded';
 import { UploadRecording } from '@/features/recorded-classes/ui/upload-recording';
 import { UploadNotes } from '@/features/notes/ui/upload-notes';
+import { CoursesSection } from '@/features/courses/ui/courses-section';
 import Link from 'next/link';
 
 const TeacherStatCard = ({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) => (
@@ -147,6 +148,9 @@ export const TeacherDashboard = () => {
               ))}
             </Paper>
           </Box>
+
+          {/* Courses Section */}
+          <CoursesSection role="teacher" />
         </Stack>
 
         <UploadRecording open={showUploadRecording} onClose={() => setShowUploadRecording(false)} />

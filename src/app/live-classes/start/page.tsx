@@ -5,11 +5,15 @@ import { Container, Stack, Typography, Box, Paper, TextField, Button, MenuItem }
 import { PageContainer } from '@/shared/ui/page-container';
 import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { MOCK_COURSES } from '@/features/courses/model/mock-data';
 
 export default function StartClassPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const courseId = searchParams.get('courseId');
   const [loading, setLoading] = useState(false);
+  const [selectedCourse, setSelectedCourse] = useState(courseId || '1');
 
   const handleStartClass = () => {
     setLoading(true);
@@ -49,10 +53,18 @@ export default function StartClassPage() {
                 variant="outlined"
               />
 
-              <TextField select fullWidth label="Select Course/Batch" defaultValue="ssc">
-                <MenuItem value="ssc">SSC CGL 2024</MenuItem>
-                <MenuItem value="banking">IBPS PO Batch</MenuItem>
-                <MenuItem value="railways">RRB NTPC</MenuItem>
+              <TextField
+                select
+                fullWidth
+                label="Select Course/Batch"
+                value={selectedCourse}
+                onChange={(e) => setSelectedCourse(e.target.value)}
+              >
+                {MOCK_COURSES.map((course) => (
+                  <MenuItem key={course.id} value={course.id}>
+                    {course.title}
+                  </MenuItem>
+                ))}
               </TextField>
 
               <TextField

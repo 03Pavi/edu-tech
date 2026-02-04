@@ -13,6 +13,7 @@ import { useAppSelector } from '@/store/hooks';
 import { hasPermission } from '@/shared/config/permissions';
 import VideoCallRoundedIcon from '@mui/icons-material/VideoCallRounded';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
+import { CoursesSection } from '@/features/courses/ui/courses-section';
 
 export const UserDashboard = () => {
   const user = useAppSelector((state) => state.user);
@@ -161,8 +162,12 @@ export const UserDashboard = () => {
                   ))}
                 </Paper>
               </Box>
+
+              {/* Courses Section */}
+              <CoursesSection role="student" />
             </Stack>
           </Box>
+
         </Stack>
       </Container>
     </PageContainer>
