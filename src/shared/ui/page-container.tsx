@@ -15,7 +15,8 @@ import {
   Avatar,
   Menu,
   MenuItem,
-  Divider
+  Divider,
+  Grid
 } from '@mui/material';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
@@ -174,28 +175,7 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: '#F8FAFC' }}>
       {/* Sticky Header Wrapper */}
       <Box sx={{ position: 'sticky', top: 0, zIndex: 1300 }}>
-        {/* Top Banner */}
-        {showBanner && (
-          <Box className={styles.topBanner}>
-            <Typography className={styles.bannerText}>
-              🚀 Access Live Classes, Mocks, PYP & Notes for 375+ Exams!
-            </Typography>
-            <Button
-              size="small"
-              variant="contained"
-              className={styles.trialButton}
-            >
-              Start ₹1 Trial
-            </Button>
-            <IconButton
-              size="small"
-              onClick={() => setShowBanner(false)}
-              className={styles.closeBanner}
-            >
-              <CloseIcon sx={{ fontSize: 14 }} />
-            </IconButton>
-          </Box>
-        )}
+
 
         {/* Main Navbar */}
         <AppBar
@@ -235,15 +215,18 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
 
               {/* Nav Items - Desktop Only */}
               <Stack direction="row" className={styles.navItems}>
-                {['Exams', 'Courses', 'Test Series', 'Live Classes', 'Recorded', 'Dashboard', 'More'].map((item) => (
+                {[
+                  { name: 'PYQ Vault', href: '/' },
+                  { name: 'Test Series', href: '/test-series' },
+                  { name: 'Dashboard', href: '/dashboard' },
+                ].map((item) => (
                   <Button
-                    key={item}
-                    href={item === 'Dashboard' ? '/dashboard' : item === 'Courses' ? '/courses' : item === 'Test Series' ? '/test-series' : item === 'Live Classes' ? '/live-classes' : item === 'Recorded' ? '/recorded-classes' : '#'}
+                    key={item.name}
+                    href={item.href}
                     component={Link}
-                    endIcon={['Exams', 'Pass', 'More'].includes(item) ? <KeyboardArrowDownIcon /> : null}
                     className={styles.navButton}
                   >
-                    {item}
+                    {item.name}
                   </Button>
                 ))}
               </Stack>
@@ -255,88 +238,73 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
                   <KeyboardArrowDownIcon sx={{ fontSize: 14 }} />
                 </IconButton>
 
-                {!user.isAuthenticated ? (
-                  <Button
-                    variant="contained"
-                    href="/auth/login"
+                <Avatar
+                  onClick={handleProfileMenuOpen}
+                  sx={{
+                    width: 32,
+                    height: 32,
+                    bgcolor: '#1CB068',
+                    fontSize: '0.875rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'transform 0.2s',
+                    '&:hover': { transform: 'scale(1.1)' }
+                  }}
+                >
+                  {user.name ? user.name[0].toUpperCase() : 'U'}
+                </Avatar>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleProfileMenuClose}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                  PaperProps={{
+                    sx: {
+                      mt: 1.5,
+                      width: 240,
+                      borderRadius: '16px',
+                      boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                      border: '1px solid #F1F5F9',
+                      p: 1
+                    }
+                  }}
+                >
+                  <Box sx={{ px: 2, py: 1.5 }}>
+                    <Typography variant="body1" fontWeight="800" color="#1B2559">
+                      {user.name || 'Guest User'}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {user.role ? user.role.toUpperCase() : 'GUEST'} • Student
+                    </Typography>
+                  </Box>
+                  <Divider sx={{ my: 1, borderColor: '#F1F5F9' }} />
+                  <MenuItem
                     component={Link}
-                    size="small"
-                    className={styles.getStartedButton}
+                    href="/profile"
+                    onClick={handleProfileMenuClose}
+                    sx={{ borderRadius: '12px', mb: 0.5, fontWeight: 600, color: '#475569' }}
                   >
-                    Get Started
-                  </Button>
-                ) : (
-                  <>
-                    <Avatar
-                      onClick={handleProfileMenuOpen}
-                      sx={{
-                        width: 32,
-                        height: 32,
-                        bgcolor: '#1CB068',
-                        fontSize: '0.875rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        transition: 'transform 0.2s',
-                        '&:hover': { transform: 'scale(1.1)' }
-                      }}
-                    >
-                      {user.name?.[0]?.toUpperCase() || 'U'}
-                    </Avatar>
-
-                    <Menu
-                      anchorEl={anchorEl}
-                      open={Boolean(anchorEl)}
-                      onClose={handleProfileMenuClose}
-                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                      PaperProps={{
-                        sx: {
-                          mt: 1.5,
-                          width: 240,
-                          borderRadius: '16px',
-                          boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
-                          border: '1px solid #F1F5F9',
-                          p: 1
-                        }
-                      }}
-                    >
-                      <Box sx={{ px: 2, py: 1.5 }}>
-                        <Typography variant="body1" fontWeight="800" color="#1B2559">
-                          {user.name}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {user.role?.toUpperCase()} • Premium Member
-                        </Typography>
-                      </Box>
-                      <Divider sx={{ my: 1, borderColor: '#F1F5F9' }} />
-                      <MenuItem
-                        component={Link}
-                        href="/profile"
-                        onClick={handleProfileMenuClose}
-                        sx={{ borderRadius: '12px', mb: 0.5, fontWeight: 600, color: '#475569' }}
-                      >
-                        <ListItemIcon sx={{ minWidth: 32 }}>
-                          <PersonRoundedIcon fontSize="small" />
-                        </ListItemIcon>
-                        Profile
-                      </MenuItem>
-                      <MenuItem
-                        onClick={handleLogout}
-                        sx={{
-                          borderRadius: '12px',
-                          fontWeight: 600,
-                          color: '#EF4444',
-                          '&:hover': { bgcolor: '#FEF2F2' }
-                        }}
-                      >
-                        <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>
-                          <LogoutRoundedIcon fontSize="small" />
-                        </ListItemIcon>
-                        Logout
-                      </MenuItem>
-                    </Menu>
-                  </>
-                )}
+                    <ListItemIcon sx={{ minWidth: 32 }}>
+                      <PersonRoundedIcon fontSize="small" />
+                    </ListItemIcon>
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleLogout}
+                    sx={{
+                      borderRadius: '12px',
+                      fontWeight: 600,
+                      color: '#EF4444',
+                      '&:hover': { bgcolor: '#FEF2F2' }
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 32, color: 'inherit' }}>
+                      <LogoutRoundedIcon fontSize="small" />
+                    </ListItemIcon>
+                    Logout
+                  </MenuItem>
+                </Menu>
               </Stack>
             </Toolbar>
           </Container>
@@ -389,16 +357,83 @@ export const PageContainer: React.FC<PageContainerProps> = ({ children }) => {
             {children}
           </Box>
 
-          {/* Footer / Floating */}
-          <Box className={styles.floatingContainer}>
-            <Fab color="success" aria-label="whatsapp" className={styles.whatsappFab}>
-              <WhatsAppIcon sx={{ fontSize: { xs: 24, md: 28 } }} />
-            </Fab>
-          </Box>
+          {/* Footer */}
+          <Box sx={{ bgcolor: '#0A0F1D', color: '#94A3B8', pt: 8, pb: 4, borderTop: '1px solid #1E293B' }}>
+            <Container maxWidth="xl">
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', md: 'row' },
+                  justify: 'space-between',
+                  gap: 4,
+                  mb: 6,
+                }}
+              >
+                <Box sx={{ flex: 1.5 }}>
+                  <Stack spacing={2}>
+                    <Stack direction="row" alignItems="center" spacing={1.5}>
+                      <Box sx={{ bgcolor: '#1CB068', color: 'white', fontWeight: 900, px: 1.5, py: 0.5, borderRadius: 2, fontSize: '1.2rem' }}>
+                        E
+                      </Box>
+                      <Typography variant="h5" fontWeight="900" color="white">
+                        EduMind
+                      </Typography>
+                    </Stack>
+                    <Typography variant="body2" sx={{ color: '#94A3B8', maxWidth: 320, lineHeight: 1.6 }}>
+                      India's top platform for exam preparation. Empowering millions of students to achieve their dreams.
+                    </Typography>
+                  </Stack>
+                </Box>
 
-          {/* Simple Mobile Nav Hint */}
-          <Box sx={{ p: 4, textAlign: 'center', opacity: 0.3, display: { xs: 'block', md: 'none' } }}>
-            <Typography variant="caption">© 2024 EduMind Education</Typography>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="800" color="white" sx={{ mb: 2 }}>
+                    Company
+                  </Typography>
+                  <Stack spacing={1.2}>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>About Us</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Careers</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Contact Us</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Blog</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Affiliate</Typography>
+                  </Stack>
+                </Box>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="800" color="white" sx={{ mb: 2 }}>
+                    Exams
+                  </Typography>
+                  <Stack spacing={1.2}>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>SSC Exams</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Banking</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Railway</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Teaching</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Defense</Typography>
+                  </Stack>
+                </Box>
+
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" fontWeight="800" color="white" sx={{ mb: 2 }}>
+                    Products
+                  </Typography>
+                  <Stack spacing={1.2}>
+                    <Typography variant="body2" component={Link} href="/test-series" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Test Series</Typography>
+                    <Typography variant="body2" component={Link} href="/" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Previous Year Papers</Typography>
+                    <Typography variant="body2" component={Link} href="#" sx={{ color: '#94A3B8', textDecoration: 'none', '&:hover': { color: 'white' } }}>Practice Questions</Typography>
+                  </Stack>
+                </Box>
+              </Box>
+
+              <Box sx={{ borderTop: '1px solid #1E293B', pt: 4, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'center', gap: 2 }}>
+                <Typography variant="body2" color="#64748B">
+                  © 2024 EduMind Education. All rights reserved.
+                </Typography>
+
+                <Stack direction="row" spacing={3}>
+                  <Typography variant="body2" component={Link} href="#" sx={{ color: '#64748B', textDecoration: 'none', '&:hover': { color: 'white' } }}>Privacy Policy</Typography>
+                  <Typography variant="body2" component={Link} href="#" sx={{ color: '#64748B', textDecoration: 'none', '&:hover': { color: 'white' } }}>Terms of Service</Typography>
+                </Stack>
+              </Box>
+            </Container>
           </Box>
         </Box>
       </Box>

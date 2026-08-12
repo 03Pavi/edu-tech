@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Typography,
   Button,
@@ -13,6 +13,9 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { fetchExamsThunk } from '@/store/slices/pyq-slice';
 import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
 import SchoolRoundedIcon from '@mui/icons-material/SchoolRounded';
 import QuizRoundedIcon from '@mui/icons-material/QuizRounded';
@@ -29,38 +32,80 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TrainRoundedIcon from '@mui/icons-material/TrainRounded';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
+import DescriptionRoundedIcon from '@mui/icons-material/DescriptionRounded';
 import { PageContainer } from '@/shared/ui/page-container';
 import styles from './home.module.scss';
 
+const EXAM_ICON_MAP: Record<string, React.ReactElement> = {
+  'ssc-cgl': <AccountBalanceRoundedIcon />,
+  'ssc-chsl': <AccountBalanceRoundedIcon />,
+  'ssc-cpo': <SecurityRoundedIcon />,
+  'ssc-mts': <AssignmentRoundedIcon />,
+  'ssc-gd': <SecurityRoundedIcon />,
+  'rrb-ntpc': <TrainRoundedIcon />,
+  'ibps-po': <AccountBalanceRoundedIcon />,
+  'teaching': <SchoolRoundedIcon />,
+  'engineering': <EngineeringRoundedIcon />,
+};
+
+const CATEGORY_ICON_MAP: Record<string, React.ReactElement> = {
+  'SSC': <AccountBalanceRoundedIcon />,
+  'Railway': <TrainRoundedIcon />,
+  'Banking': <AccountBalanceRoundedIcon />,
+  'Defense': <SecurityRoundedIcon />,
+  'Teaching': <SchoolRoundedIcon />,
+  'Engineering': <EngineeringRoundedIcon />,
+  'State': <LibraryBooksRoundedIcon />,
+};
+
+function getExamIcon(slug: string, category: string): React.ReactElement {
+  return EXAM_ICON_MAP[slug] ?? CATEGORY_ICON_MAP[category] ?? <LanguageRoundedIcon />;
+}
+
 export default function HomePage() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { exams, loadingExams } = useAppSelector((state) => state.pyq);
+
+  useEffect(() => {
+    dispatch(fetchExamsThunk());
+  }, [dispatch]);
+
   const stats = [
     {
-      label: 'Registered Students',
-      value: '6.4 Crore+',
-      icon: <GroupsRoundedIcon />,
+      label: 'Previous Year Papers',
+      value: '1000+',
+      icon: <DescriptionRoundedIcon />,
       bgColor: alpha('#1CB068', 0.1),
-      color: '#1CB068'
+      color: '#1CB068',
+      subtext: 'Shift-wise PDFs'
     },
     {
-      label: 'Selections',
-      value: '70,000+',
-      icon: <SchoolRoundedIcon />,
+      label: 'Exams Covered',
+      value: `${exams.length || '6'}+`,
+      icon: <LibraryBooksRoundedIcon />,
       bgColor: alpha('#00A3FF', 0.1),
-      color: '#00A3FF'
+      color: '#00A3FF',
+      subtext: 'SSC, Railway & more'
     },
     {
-      label: 'Screenshots',
-      value: '5,000+',
-      icon: <QuizRoundedIcon />,
+      label: 'AI-Powered Analysis',
+      value: '100%',
+      icon: <AutoAwesomeRoundedIcon />,
+      bgColor: alpha('#8B5CF6', 0.1),
+      color: '#8B5CF6',
+      subtext: 'Smart insights'
+    },
+    {
+      label: 'Free Access',
+      value: 'Always',
+      icon: <LockOpenRoundedIcon />,
       bgColor: alpha('#F59E0B', 0.1),
-      color: '#F59E0B'
-    },
-    {
-      label: 'Classes/Day',
-      value: '100+',
-      icon: <AssignmentRoundedIcon />,
-      bgColor: alpha('#EC4899', 0.1),
-      color: '#EC4899'
+      color: '#F59E0B',
+      subtext: 'No subscription needed'
     }
   ];
 
@@ -91,7 +136,8 @@ export default function HomePage() {
                 </Box>
 
                 <Typography className={styles.heroDescription}>
-                  Start your preparation for selections. <Box component="span" className={styles.highlightGreen}>For Free!</Box>
+                  Start your preparation for selections.{' '}
+                  <Box component="span" className={styles.highlightGreen}>For Free!</Box>
                 </Typography>
 
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ width: '100%' }}>
@@ -104,7 +150,7 @@ export default function HomePage() {
                   >
                     Get Started For Free
                   </Button>
-                  <Stack direction="row" spacing={1} justifyContent={{ xs: 'center', sm: 'flex-start' }} alignItems="center">
+                  {/* <Stack direction="row" spacing={1} justifyContent={{ xs: 'center', sm: 'flex-start' }} alignItems="center">
                     <Image
                       src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
                       alt="Google Play"
@@ -119,7 +165,7 @@ export default function HomePage() {
                       height={40}
                       style={{ cursor: 'pointer' }}
                     />
-                  </Stack>
+                  </Stack> */}
                 </Stack>
               </Stack>
             </Box>
@@ -128,11 +174,11 @@ export default function HomePage() {
             <Box className={styles.heroIllustrationWrapper}>
               <Box className={styles.heroIllustration}>
                 <Image
-                  src="/student-hero.png"
+                  src="/hero-woman.png"
                   alt="Study Prep"
                   width={900}
                   height={1080}
-                  style={{ width: '100%', height: 'auto', borderRadius: '24px' }}
+                  style={{ width: '100%', height: 'auto' }}
                   priority
                   quality={100}
                 />
@@ -164,6 +210,11 @@ export default function HomePage() {
                   <Typography className={styles.statValue}>
                     {stat.value}
                   </Typography>
+                  {'subtext' in stat && (
+                    <Typography sx={{ fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, mt: 0.25 }}>
+                      {(stat as any).subtext}
+                    </Typography>
+                  )}
                 </Box>
               </Stack>
             ))}
@@ -171,35 +222,64 @@ export default function HomePage() {
         </Paper>
       </Container>
 
-      {/* Exam Categories */}
+      {/* Popular Exam Categories — driven by live API data */}
       <Box className={styles.sectionPadding}>
         <Container maxWidth="xl">
           <Typography variant="h3" className={styles.sectionTitle} textAlign="center">
             Popular <Box component="span" className={styles.highlightGreen}>Exam Categories</Box>
           </Typography>
-          <Box className={styles.categoriesGrid}>
-            {[
-              { label: 'SSC Exams', icon: <AccountBalanceRoundedIcon />, count: '20+ Exams' },
-              { label: 'Banking', icon: <AccountBalanceRoundedIcon />, count: '15+ Exams' },
-              { label: 'Teaching', icon: <SchoolRoundedIcon />, count: '12+ Exams' },
-              { label: 'Defense', icon: <SecurityRoundedIcon />, count: '10+ Exams' },
-              { label: 'Railways', icon: <GroupsRoundedIcon />, count: '8+ Exams' },
-              { label: 'Engineering', icon: <EngineeringRoundedIcon />, count: '25+ Exams' },
-              { label: 'State Exams', icon: <LibraryBooksRoundedIcon />, count: '50+ Exams' },
-              { label: 'Other', icon: <LanguageRoundedIcon />, count: '100+ Exams' }
-            ].map((cat, i) => (
-              <Paper key={i} className={styles.categoryCard} elevation={0}>
-                <Box className={styles.categoryIcon}>{cat.icon}</Box>
-                <Typography className={styles.categoryLabel}>{cat.label}</Typography>
-                <Typography className={styles.categoryCount}>{cat.count}</Typography>
-              </Paper>
-            ))}
-          </Box>
-          <Box sx={{ textAlign: 'center', mt: 6 }}>
-            <Button variant="outlined" size="large" className={styles.viewAllButton}>
+
+          {loadingExams ? (
+            /* Skeleton placeholders while fetching */
+            <Box className={styles.categoriesGrid}>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Paper
+                  key={i}
+                  className={styles.categoryCard}
+                  elevation={0}
+                  sx={{ opacity: 0.4, pointerEvents: 'none' }}
+                >
+                  <Box className={styles.categoryIcon} sx={{ bgcolor: '#E2E8F0' }} />
+                  <Box sx={{ height: 16, bgcolor: '#E2E8F0', borderRadius: 1, mx: 'auto', mb: 1, width: '60%' }} />
+                  <Box sx={{ height: 12, bgcolor: '#F1F5F9', borderRadius: 1, mx: 'auto', width: '40%' }} />
+                </Paper>
+              ))}
+            </Box>
+          ) : (
+            <Box className={styles.categoriesGrid}>
+              {exams.map((exam: any) => {
+                const yearsLabel =
+                  exam.years && exam.years.length > 0
+                    ? `${exam.years.length} Year${exam.years.length > 1 ? 's' : ''} Available`
+                    : exam.category ?? '';
+                return (
+                  <Paper
+                    key={exam.slug}
+                    className={styles.categoryCard}
+                    elevation={0}
+                    onClick={() => router.push(`/pyq/${exam.slug}`)}
+                  >
+                    <Box className={styles.categoryIcon}>
+                      {getExamIcon(exam.slug, exam.category ?? '')}
+                    </Box>
+                    <Typography className={styles.categoryLabel}>{exam.name}</Typography>
+                    <Typography className={styles.categoryCount}>{yearsLabel}</Typography>
+                  </Paper>
+                );
+              })}
+            </Box>
+          )}
+
+          {/* <Box sx={{ textAlign: 'center', mt: 6 }}>
+            <Button
+              variant="outlined"
+              size="large"
+              className={styles.viewAllButton}
+              onClick={() => router.push('/pyq/ssc-cgl')}
+            >
               View All Categories
             </Button>
-          </Box>
+          </Box> */}
         </Container>
       </Box>
 
@@ -249,7 +329,7 @@ export default function HomePage() {
       </Box>
 
       {/* Refer & Earn */}
-      <Box className={styles.referSection}>
+      {/* <Box className={styles.referSection}> 
         <Container maxWidth="xl">
           <Box className={styles.referCard}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={4} alignItems="center">
@@ -276,66 +356,9 @@ export default function HomePage() {
             </Stack>
           </Box>
         </Container>
-      </Box>
+      </Box> */}
 
       {/* Footer */}
-      <Box component="footer" className={styles.footer}>
-        <Container maxWidth="xl">
-          <Box className={styles.footerGrid}>
-            <Box>
-              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
-                <Box className={styles.footerLogoIcon}>E</Box>
-                <Typography variant="h5" sx={{ fontWeight: 900 }}>EduMind</Typography>
-              </Stack>
-              <Typography variant="body2" sx={{ color: '#64748B', maxWidth: 300, mb: 3 }}>
-                India's top platform for exam preparation. Empowring millions of students to achieve their dreams.
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                <IconButton size="small" className={styles.socialIcon}><FacebookIcon /></IconButton>
-                <IconButton size="small" className={styles.socialIcon}><TwitterIcon /></IconButton>
-                <IconButton size="small" className={styles.socialIcon}><InstagramIcon /></IconButton>
-                <IconButton size="small" className={styles.socialIcon}><LinkedInIcon /></IconButton>
-              </Stack>
-            </Box>
-
-            <Box>
-              <Typography variant="h6" className={styles.footerHeading}>Company</Typography>
-              <Stack spacing={1.5}>
-                {['About Us', 'Careers', 'Contact Us', 'Blog', 'Affiliate'].map(link => (
-                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
-                ))}
-              </Stack>
-            </Box>
-
-            <Box>
-              <Typography variant="h6" className={styles.footerHeading}>Exams</Typography>
-              <Stack spacing={1.5}>
-                {['SSC Exams', 'Banking', 'Railway', 'Teaching', 'Defense'].map(link => (
-                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
-                ))}
-              </Stack>
-            </Box>
-
-            <Box>
-              <Typography variant="h6" className={styles.footerHeading}>Products</Typography>
-              <Stack spacing={1.5}>
-                {['Test Series', 'SuperCoaching', 'Previous Year Papers', 'Practice Questions', 'Live Classes'].map(link => (
-                  <Link key={link} href="#" className={styles.footerLink}>{link}</Link>
-                ))}
-              </Stack>
-            </Box>
-          </Box>
-          <Box className={styles.footerBottom}>
-            <Typography variant="body2" color="text.secondary">
-              © 2024 EduMind Education. All rights reserved.
-            </Typography>
-            <Stack direction="row" spacing={3}>
-              <Link href="#" className={styles.footerLink}>Privacy Policy</Link>
-              <Link href="#" className={styles.footerLink}>Terms of Service</Link>
-            </Stack>
-          </Box>
-        </Container>
-      </Box>
     </PageContainer>
   );
 }

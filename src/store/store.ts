@@ -3,6 +3,7 @@ import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./slices/user-slice";
+import pyqReducer from "./slices/pyq-slice";
 
 const createNoopStorage = () => {
   return {
@@ -26,10 +27,12 @@ const storage =
 const persistConfig = {
   key: "root",
   storage,
+  blacklist: ["pyq"], // Don't persist transient PYQ search/expansion states
 };
 
 const rootReducer = combineReducers({
   user: userReducer,
+  pyq: pyqReducer,
 });
 
 const persistedReducer: any = persistReducer(persistConfig, rootReducer);
@@ -37,7 +40,7 @@ const persistedReducer: any = persistReducer(persistConfig, rootReducer);
 export const store = () =>
   configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) =>
+    middleware: (getDefaultMiddleware: any) =>
       getDefaultMiddleware({
         serializableCheck: false,
       }),

@@ -12,7 +12,7 @@ import { LiveStream } from '@/features/live-classes/ui/live-stream';
 export default function LiveClassRoomPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const classId = params['class-id'] as string;
+  const classId = (params?.[`class-id`] as string) || '';
   const role = (searchParams.get('role') as 'teacher' | 'student') || 'student';
 
   return (

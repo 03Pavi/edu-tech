@@ -1,9 +1,8 @@
-
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type UserRole = 'user' | 'admin' | 'teacher';
 
-interface UserState {
+export interface UserState {
   name: string;
   role: UserRole;
   isAuthenticated: boolean;
@@ -15,16 +14,21 @@ const initialState: UserState = {
   isAuthenticated: false,
 };
 
+export interface SetUserPayload {
+  name: string;
+  role?: UserRole;
+}
+
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ name: string; role?: UserRole }>) => {
+    setUser: (state: UserState, action: any) => {
       state.name = action.payload.name;
       state.role = action.payload.role || 'user';
       state.isAuthenticated = true;
     },
-    logout: (state) => {
+    logout: (state: UserState) => {
       state.name = "";
       state.role = 'user';
       state.isAuthenticated = false;
